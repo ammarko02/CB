@@ -98,6 +98,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Force proper text direction inheritance */
+  html[dir="rtl"] * {
+    direction: rtl !important;
+    text-align: inherit;
+  }
+
+  html[dir="ltr"] * {
+    direction: ltr !important;
+    text-align: inherit;
+  }
+
+  /* Ensure proper text alignment for RTL */
+  [dir="rtl"] {
+    text-align: right !important;
+  }
+
+  [dir="ltr"] {
+    text-align: left !important;
+  }
 }
 
 /* Enhanced RTL Support */
