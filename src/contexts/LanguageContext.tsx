@@ -20,20 +20,29 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const handleLanguageChange = (lng: string) => {
       setCurrentLanguage(lng);
 
-      // Update document direction
-      if (lng === "ar") {
-        document.documentElement.dir = "rtl";
-        document.documentElement.lang = "ar";
+      // Update document direction and language
+      const isArabic = lng === "ar";
+      document.documentElement.dir = isArabic ? "rtl" : "ltr";
+      document.documentElement.lang = lng;
+
+      // Also update body attributes for consistent styling
+      document.body.dir = isArabic ? "rtl" : "ltr";
+      document.body.setAttribute("data-language", lng);
+
+      // Add/remove RTL class on document element
+      if (isArabic) {
+        document.documentElement.classList.add("rtl");
+        document.body.classList.add("rtl");
       } else {
-        document.documentElement.dir = "ltr";
-        document.documentElement.lang = "en";
+        document.documentElement.classList.remove("rtl");
+        document.body.classList.remove("rtl");
       }
     };
 
     i18n.on("languageChanged", handleLanguageChange);
 
     // Set initial state
-    handleLanguageChange(i18n.language);
+    handleLanguageChange(i18n.language || "en");
 
     return () => {
       i18n.off("languageChanged", handleLanguageChange);
