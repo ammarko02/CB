@@ -98,6 +98,42 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Override ALL Tailwind utilities for RTL */
+@layer utilities {
+  [dir="rtl"] .text-left {
+    text-align: right !important;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left !important;
+  }
+
+  [dir="rtl"] .text-start {
+    text-align: right !important;
+  }
+
+  [dir="rtl"] .text-end {
+    text-align: left !important;
+  }
+
+  [dir="rtl"] .justify-start {
+    justify-content: flex-end !important;
+  }
+
+  [dir="rtl"] .justify-end {
+    justify-content: flex-start !important;
+  }
+
+  [dir="rtl"] .items-start {
+    align-items: flex-end !important;
+  }
+
+  [dir="rtl"] .items-end {
+    align-items: flex-start !important;
+  }
+}
 
   /* Force proper text direction inheritance */
   html[dir="rtl"],
@@ -154,10 +190,7 @@
 }
 
 /* ULTIMATE RTL OVERRIDES - Force RTL on everything */
-html[dir="rtl"]
-  *:not(input[type="number"]):not(.ltr-content):not(.number):not(
-    .arabic-numbers
-  ) {
+html[dir="rtl"] *:not(input[type="number"]):not(.ltr-content):not(.number):not(.arabic-numbers) {
   direction: rtl !important;
   text-align: right !important;
 }
@@ -188,24 +221,11 @@ html[dir="rtl"]
 }
 
 /* Specific overrides for all possible elements */
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6,
-[dir="rtl"] p,
-[dir="rtl"] span,
-[dir="rtl"] div,
-[dir="rtl"] label,
-[dir="rtl"] li,
-[dir="rtl"] .card,
-[dir="rtl"] .card-header,
-[dir="rtl"] .card-content,
-[dir="rtl"] .card-title,
-[dir="rtl"] .card-description,
-[dir="rtl"] .badge,
-[dir="rtl"] .button-text {
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] h6,
+[dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] div, [dir="rtl"] label, [dir="rtl"] li,
+[dir="rtl"] .card, [dir="rtl"] .card-header, [dir="rtl"] .card-content,
+[dir="rtl"] .card-title, [dir="rtl"] .card-description,
+[dir="rtl"] .badge, [dir="rtl"] .button-text {
   text-align: right !important;
   direction: rtl !important;
 }
@@ -288,100 +308,40 @@ html[dir="rtl"]
   margin-left: auto;
 }
 
-[dir="rtl"] .ml-1 {
-  margin-left: 0;
-  margin-right: 0.25rem;
-}
-[dir="rtl"] .mr-1 {
-  margin-right: 0;
-  margin-left: 0.25rem;
-}
-[dir="rtl"] .ml-2 {
-  margin-left: 0;
-  margin-right: 0.5rem;
-}
-[dir="rtl"] .mr-2 {
-  margin-right: 0;
-  margin-left: 0.5rem;
-}
-[dir="rtl"] .ml-3 {
-  margin-left: 0;
-  margin-right: 0.75rem;
-}
-[dir="rtl"] .mr-3 {
-  margin-right: 0;
-  margin-left: 0.75rem;
-}
-[dir="rtl"] .ml-4 {
-  margin-left: 0;
-  margin-right: 1rem;
-}
-[dir="rtl"] .mr-4 {
-  margin-right: 0;
-  margin-left: 1rem;
-}
+[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
 
 /* Padding adjustments for RTL */
-[dir="rtl"] .pl-1 {
-  padding-left: 0;
-  padding-right: 0.25rem;
-}
-[dir="rtl"] .pr-1 {
-  padding-right: 0;
-  padding-left: 0.25rem;
-}
-[dir="rtl"] .pl-2 {
-  padding-left: 0;
-  padding-right: 0.5rem;
-}
-[dir="rtl"] .pr-2 {
-  padding-right: 0;
-  padding-left: 0.5rem;
-}
-[dir="rtl"] .pl-3 {
-  padding-left: 0;
-  padding-right: 0.75rem;
-}
-[dir="rtl"] .pr-3 {
-  padding-right: 0;
-  padding-left: 0.75rem;
-}
-[dir="rtl"] .pl-4 {
-  padding-left: 0;
-  padding-right: 1rem;
-}
-[dir="rtl"] .pr-4 {
-  padding-right: 0;
-  padding-left: 1rem;
-}
-[dir="rtl"] .pl-6 {
-  padding-left: 0;
-  padding-right: 1.5rem;
-}
-[dir="rtl"] .pr-6 {
-  padding-right: 0;
-  padding-left: 1.5rem;
-}
+[dir="rtl"] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
+[dir="rtl"] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
+[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
+[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+[dir="rtl"] .pl-6 { padding-left: 0; padding-right: 1.5rem; }
+[dir="rtl"] .pr-6 { padding-right: 0; padding-left: 1.5rem; }
 
 /* Enhanced Arabic Typography */
 body[dir="rtl"],
 [dir="rtl"] * {
   font-family:
-    "Segoe UI", "Tahoma", "Geneva", "Verdana", "sans-serif", "Arabic UI Text",
-    "Arabic UI Display", "Noto Sans Arabic", "Arial Unicode MS",
-    "Times New Roman";
-  font-feature-settings:
-    "kern" 1,
-    "liga" 1;
+    "Segoe UI", "Tahoma", "Geneva", "Verdana", "sans-serif",
+    "Arabic UI Text", "Arabic UI Display", "Noto Sans Arabic",
+    "Arial Unicode MS", "Times New Roman";
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 /* Arabic headings with better line-height */
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6 {
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3,
+[dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] h6 {
   line-height: 1.6;
   font-weight: 600;
 }
