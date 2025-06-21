@@ -153,6 +153,15 @@
   direction: rtl !important;
 }
 
+/* ULTIMATE RTL OVERRIDES - Force RTL on everything */
+html[dir="rtl"]
+  *:not(input[type="number"]):not(.ltr-content):not(.number):not(
+    .arabic-numbers
+  ) {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
 /* Force RTL on all common UI elements */
 [dir="rtl"] .text-left,
 [dir="rtl"] .text-start {
@@ -168,25 +177,47 @@
   text-align: center !important;
 }
 
-/* Override Tailwind default text alignment in RTL */
-[dir="rtl"] * {
-  text-align: inherit;
+/* Override ALL Tailwind text utilities in RTL */
+[dir="rtl"] .text-sm,
+[dir="rtl"] .text-base,
+[dir="rtl"] .text-lg,
+[dir="rtl"] .text-xl,
+[dir="rtl"] .text-2xl,
+[dir="rtl"] .text-3xl {
+  text-align: right !important;
 }
 
-/* Specific overrides for cards and components */
+/* Specific overrides for all possible elements */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] div,
+[dir="rtl"] label,
+[dir="rtl"] li,
 [dir="rtl"] .card,
 [dir="rtl"] .card-header,
 [dir="rtl"] .card-content,
 [dir="rtl"] .card-title,
-[dir="rtl"] .card-description {
+[dir="rtl"] .card-description,
+[dir="rtl"] .badge,
+[dir="rtl"] .button-text {
   text-align: right !important;
   direction: rtl !important;
 }
 
-/* Button content alignment */
+/* Button content alignment - keep center for buttons */
 [dir="rtl"] button,
 [dir="rtl"] .btn {
-  text-align: center !important;
+  direction: rtl !important;
+}
+
+[dir="rtl"] button *,
+[dir="rtl"] .btn * {
   direction: rtl !important;
 }
 
@@ -194,6 +225,37 @@
 [dir="rtl"] .nav-item,
 [dir="rtl"] .menu-item,
 [dir="rtl"] .dropdown-item {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Table content */
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Form labels and descriptions */
+[dir="rtl"] .form-label,
+[dir="rtl"] .form-description,
+[dir="rtl"] .form-message {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Flex containers with text */
+[dir="rtl"] .flex,
+[dir="rtl"] .flex-col,
+[dir="rtl"] .flex-row {
+  direction: rtl !important;
+}
+
+/* Stats and dashboard specific */
+[dir="rtl"] .stat-value,
+[dir="rtl"] .stat-label,
+[dir="rtl"] .dashboard-title,
+[dir="rtl"] .dashboard-description {
   text-align: right !important;
   direction: rtl !important;
 }
