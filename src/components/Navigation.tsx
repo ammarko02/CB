@@ -178,8 +178,8 @@ export function Navigation() {
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.email}
                   </p>
-                  <p className="text-xs leading-none text-muted-foreground capitalize">
-                    {user.role.replace("_", " ")}
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {t(`roles.${user.role}`)}
                   </p>
                 </div>
               </DropdownMenuLabel>
