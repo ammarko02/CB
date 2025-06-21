@@ -14,35 +14,35 @@ import "@/lib/i18n";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import Unauthorized from "./pages/Unauthorized";
+//import Unauthorized from "./pages/Unauthorized";
 
 // Admin Pages
-import AdminDashboard from "./pages/admin/Dashboard";
-import OffersApproval from "./pages/admin/OffersApproval";
-import AdminAnalytics from "./pages/admin/Analytics";
+//import AdminDashboard from "./pages/admin/Dashboard";
+//import OffersApproval from "./pages/admin/OffersApproval";
+//import AdminAnalytics from "./pages/admin/Analytics";
 //import AdminUsers from "./pages/admin/Users";
-import AdminSuppliers from "./pages/admin/Suppliers";
+//import AdminSuppliers from "./pages/admin/Suppliers";
 
 // HR Pages
-import HRDashboard from "./pages/hr/Dashboard";
-import EmployeeManagement from "./pages/hr/EmployeeManagement";
-import HRReports from "./pages/hr/Reports";
-import HRDepartments from "./pages/hr/Departments";
-import BulkImportGuide from "./pages/hr/BulkImportGuide";
-import HRAnalytics from "./pages/hr/Analytics";
+//import HRDashboard from "./pages/hr/Dashboard";
+//import EmployeeManagement from "./pages/hr/EmployeeManagement";
+//import HRReports from "./pages/hr/Reports";
+//import HRDepartments from "./pages/hr/Departments";
+//import BulkImportGuide from "./pages/hr/BulkImportGuide";
+//import HRAnalytics from "./pages/hr/Analytics";
 
 // Supplier Pages
-import SupplierDashboard from "./pages/supplier/Dashboard";
-import SupplierOffers from "./pages/supplier/OfferManagement";
-import CreateOffer from "./pages/supplier/CreateOffer";
-import SupplierAnalytics from "./pages/supplier/Analytics";
+//import SupplierDashboard from "./pages/supplier/Dashboard";
+//import SupplierOffers from "./pages/supplier/OfferManagement";
+//import CreateOffer from "./pages/supplier/CreateOffer";
+//import SupplierAnalytics from "./pages/supplier/Analytics";
 
 // Employee Pages
-import EmployeeDashboard from "./pages/employee/Dashboard";
-import BrowseOffers from "./pages/employee/BrowseOffers";
-import RedemptionHistory from "./pages/employee/RedemptionHistory";
-import MyRedemptions from "./pages/employee/MyRedemptions";
-import EmployeeFavorites from "./pages/employee/Favorites";
+//import EmployeeDashboard from "./pages/employee/Dashboard";
+//import BrowseOffers from "./pages/employee/BrowseOffers";
+//import RedemptionHistory from "./pages/employee/RedemptionHistory";
+//import MyRedemptions from "./pages/employee/MyRedemptions";
+//import EmployeeFavorites from "./pages/employee/Favorites";
 
 // Test Pages (development only)
 import TranslationTest from "./pages/TranslationTest";
