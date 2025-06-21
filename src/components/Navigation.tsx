@@ -171,7 +171,7 @@ export function Navigation() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="ltr:mr-2 rtl:ml-2 h-4 w-4" />
                 <span>{t("common.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -185,7 +185,7 @@ export function Navigation() {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72">
+            <SheetContent side="left" className="w-72 rtl:right-0")
               <div className="flex flex-col gap-6">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
