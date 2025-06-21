@@ -76,6 +76,27 @@ export function Navigation() {
     setIsOpen(false);
   };
 
+  // Translation mapping for navigation items
+  const getTranslatedLabel = (label: string) => {
+    const labelMap: { [key: string]: string } = {
+      Dashboard: t("navigation.dashboard"),
+      "Offers Approval": t("navigation.offersApproval"),
+      Analytics: t("navigation.analytics"),
+      Users: t("navigation.users"),
+      Suppliers: t("navigation.suppliers"),
+      Employees: t("navigation.employees"),
+      Reports: t("navigation.reports"),
+      Departments: t("navigation.departments"),
+      "My Offers": t("navigation.myOffers"),
+      "Create Offer": t("navigation.createOffer"),
+      "Browse Offers": t("navigation.browseOffers"),
+      "My Redemptions": t("navigation.myRedemptions"),
+      "My Coupons": t("navigation.myRedemptions"),
+      Favorites: t("navigation.favorites"),
+    };
+    return labelMap[label] || label;
+  };
+
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
     <div
       className={cn("flex gap-2", mobile ? "flex-col space-y-2" : "flex-row")}
@@ -92,7 +113,7 @@ export function Navigation() {
             onClick={() => handleNavigation(item.path)}
           >
             <Icon className="h-4 w-4" />
-            {item.label}
+            {getTranslatedLabel(item.label)}
           </Button>
         );
       })}
