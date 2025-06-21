@@ -285,6 +285,12 @@ body[dir="rtl"],
   gap: 0.5rem;
 }
 
+/* Better button handling for RTL */
+[dir="rtl"] button .lucide {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 [dir="rtl"] .icon-left {
   order: 2;
   margin-left: 0.5rem;
@@ -295,6 +301,22 @@ body[dir="rtl"],
   order: -1;
   margin-right: 0.5rem;
   margin-left: 0;
+}
+
+/* Fix button text and icon arrangement in RTL */
+[dir="rtl"] .justify-start {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+/* Better spacing for buttons with icons in RTL */
+[dir="rtl"] button[class*="gap-"] {
+  flex-direction: row-reverse;
 }
 
 /* Form elements for RTL */
