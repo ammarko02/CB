@@ -214,7 +214,7 @@ export function Navigation() {
                       HP
                     </span>
                   </div>
-                  <span className="font-bold">Happy Perks Hub</span>
+                  <span className="font-bold">{t("app.title")}</span>
                 </div>
                 <nav>
                   <NavItems mobile />
