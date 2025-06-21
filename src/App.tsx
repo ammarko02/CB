@@ -14,7 +14,7 @@ import "@/lib/i18n";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-//import Unauthorized from "./pages/Unauthorized";
+import Unauthorized from "./pages/Unauthorized";
 
 // Admin Pages
 //import AdminDashboard from "./pages/admin/Dashboard";
