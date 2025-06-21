@@ -625,3 +625,43 @@ body[dir="rtl"],
   direction: rtl !important;
   text-align: right !important;
 }
+
+/* FINAL OVERRIDE - Force RTL on everything when dir="rtl" */
+[dir="rtl"] * {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Keep specific elements LTR */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] .number,
+[dir="rtl"] .arabic-numbers,
+[dir="rtl"] .ltr-content,
+[dir="rtl"] .price {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Keep buttons centered but RTL */
+[dir="rtl"] button {
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+/* Make sure flexboxes work in RTL */
+[dir="rtl"] .flex {
+  flex-direction: row-reverse !important;
+}
+
+[dir="rtl"] .flex-col {
+  flex-direction: column !important;
+}
+
+/* Ensure all text content is right-aligned */
+[dir="rtl"] .text-muted-foreground,
+[dir="rtl"] .text-foreground,
+[dir="rtl"] .text-primary,
+[dir="rtl"] .text-secondary {
+  text-align: right !important;
+  direction: rtl !important;
+}
