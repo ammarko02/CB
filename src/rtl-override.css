@@ -1,0 +1,158 @@
+/* Ultimate RTL Override CSS - Forces proper Arabic text direction */
+
+/* Base RTL setup */
+html[dir="rtl"],
+html[dir="rtl"] body {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Force RTL on ALL elements except specific exclusions */
+[dir="rtl"]
+  *:not(input[type="number"]):not(.ltr-content):not(.number):not(
+    .arabic-numbers
+  ):not(.price) {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Typography elements */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] div,
+[dir="rtl"] label {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Card components */
+[dir="rtl"] .card,
+[dir="rtl"] .card-header,
+[dir="rtl"] .card-content,
+[dir="rtl"] .card-title,
+[dir="rtl"] .card-description {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Override all Tailwind text alignment classes */
+[dir="rtl"] .text-left {
+  text-align: right !important;
+}
+[dir="rtl"] .text-right {
+  text-align: left !important;
+}
+[dir="rtl"] .text-start {
+  text-align: right !important;
+}
+[dir="rtl"] .text-end {
+  text-align: left !important;
+}
+[dir="rtl"] .text-center {
+  text-align: center !important;
+}
+
+/* All text size classes */
+[dir="rtl"] .text-xs,
+[dir="rtl"] .text-sm,
+[dir="rtl"] .text-base,
+[dir="rtl"] .text-lg,
+[dir="rtl"] .text-xl,
+[dir="rtl"] .text-2xl,
+[dir="rtl"] .text-3xl,
+[dir="rtl"] .text-4xl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* All text color classes */
+[dir="rtl"] .text-foreground,
+[dir="rtl"] .text-muted-foreground,
+[dir="rtl"] .text-primary,
+[dir="rtl"] .text-secondary,
+[dir="rtl"] .text-accent,
+[dir="rtl"] .text-destructive {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Buttons and interactive elements */
+[dir="rtl"] button {
+  direction: rtl !important;
+}
+
+[dir="rtl"] .badge {
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+/* Navigation and menus */
+[dir="rtl"] nav,
+[dir="rtl"] .nav,
+[dir="rtl"] .menu {
+  direction: rtl !important;
+}
+
+/* Tables */
+[dir="rtl"] table,
+[dir="rtl"] th,
+[dir="rtl"] td {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Forms */
+[dir="rtl"] label,
+[dir="rtl"] .form-label {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] textarea {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Flex layouts */
+[dir="rtl"] .flex:not(.flex-col) {
+  flex-direction: row-reverse !important;
+}
+
+/* Dashboard specific */
+[dir="rtl"] .dashboard-card,
+[dir="rtl"] .stat-card,
+[dir="rtl"] .metric-card {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Toast and notification elements */
+[dir="rtl"] .toast,
+[dir="rtl"] .notification {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Force inheritance on child elements */
+[dir="rtl"] * {
+  text-align: inherit !important;
+}
+
+[dir="rtl"] .container,
+[dir="rtl"] .wrapper,
+[dir="rtl"] .content {
+  direction: rtl !important;
+}
