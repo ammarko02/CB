@@ -28,14 +28,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       // Also update body attributes for consistent styling
       document.body.dir = isArabic ? "rtl" : "ltr";
       document.body.setAttribute("data-language", lng);
+      document.body.style.direction = isArabic ? "rtl" : "ltr";
+      document.body.style.textAlign = isArabic ? "right" : "left";
 
-      // Add/remove RTL class on document element
+      // Add/remove RTL class on document element and all containers
       if (isArabic) {
         document.documentElement.classList.add("rtl");
         document.body.classList.add("rtl");
+        document.documentElement.setAttribute("data-rtl", "true");
+        // Force refresh of styles
+        document.body.offsetHeight;
       } else {
         document.documentElement.classList.remove("rtl");
         document.body.classList.remove("rtl");
+        document.documentElement.removeAttribute("data-rtl");
+        document.body.style.direction = "ltr";
+        document.body.style.textAlign = "left";
       }
     };
 
