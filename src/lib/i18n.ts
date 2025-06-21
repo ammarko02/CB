@@ -495,7 +495,7 @@ const arTranslations = {
     fitness: "اللياقة والصحة",
     entertainment: "الترفيه",
     travel: "السفر والمواصلات",
-    retail: "الت��وق والبيع بالتجزئة",
+    retail: "الت��وق والب��ع بالتجزئة",
     technology: "التكنولوجيا",
     other: "أخرى",
   },
@@ -617,7 +617,7 @@ const arTranslations = {
     lastWeek: "الأسبوع الماضي",
     last30Days: "آخر 30 يوماً",
     last90Days: "آخر 90 يوماً",
-    lastYear_data: "العام الماضي",
+    lastYear_data: "العا�� الماضي",
     customRange: "نطاق مخصص",
     dateRange: "نطاق التاريخ",
     from: "من",
@@ -699,25 +699,44 @@ i18n
     },
   });
 
+// Enhanced function to set document direction and language
+const setDocumentDirection = (lang: string) => {
+  const isArabic = lang === "ar";
+
+  // Set document attributes
+  document.documentElement.dir = isArabic ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+
+  // Set body attributes
+  if (document.body) {
+    document.body.dir = isArabic ? "rtl" : "ltr";
+    document.body.setAttribute("data-language", lang);
+
+    // Add/remove RTL classes
+    if (isArabic) {
+      document.documentElement.classList.add("rtl");
+      document.body.classList.add("rtl");
+    } else {
+      document.documentElement.classList.remove("rtl");
+      document.body.classList.remove("rtl");
+    }
+  }
+};
+
 // Set initial document direction
 const currentLang = i18n.language || localStorage.getItem("i18nextLng") || "en";
-if (currentLang === "ar") {
-  document.documentElement.dir = "rtl";
-  document.documentElement.lang = "ar";
-} else {
-  document.documentElement.dir = "ltr";
-  document.documentElement.lang = "en";
-}
+setDocumentDirection(currentLang);
 
 // Listen for language changes
-i18n.on("languageChanged", (lng) => {
-  if (lng === "ar") {
-    document.documentElement.dir = "rtl";
-    document.documentElement.lang = "ar";
-  } else {
-    document.documentElement.dir = "ltr";
-    document.documentElement.lang = "en";
-  }
-});
+i18n.on("languageChanged", setDocumentDirection);
+
+// Also set direction when DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    setDocumentDirection(i18n.language || "en");
+  });
+} else {
+  setDocumentDirection(i18n.language || "en");
+}
 
 export default i18n;
