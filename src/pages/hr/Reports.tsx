@@ -582,13 +582,13 @@ export default function HRReports() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Eye className="w-4 h-4 text-muted-foreground" />
-                            {offer.views.toLocaleString("ar-SA")}
+                            {(offer.views || 0).toLocaleString("ar-SA")}
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <ShoppingCart className="w-4 h-4 text-muted-foreground" />
-                            {offer.redemptions.toLocaleString("ar-SA")}
+                            {(offer.redemptions || 0).toLocaleString("ar-SA")}
                           </div>
                         </TableCell>
                         <TableCell>
@@ -868,7 +868,7 @@ export default function HRReports() {
                       </span>
                     </div>
                     <p className="text-sm text-purple-700">
-                      إضافة موردين جدد في فئات مختلفة لتنويع العروض المتاحة
+                      إضافة موردين ج��د في فئات مختلفة لتنويع العروض المتاحة
                     </p>
                   </div>
 
