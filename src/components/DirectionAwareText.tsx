@@ -32,18 +32,30 @@ export function DirectionAwareText({
   const direction = getDirection();
   const textAlign = getTextAlign();
 
+  // Force RTL styles for Arabic text
+  const forcedStyles = isRTL
+    ? {
+        direction: "rtl" as const,
+        textAlign: "right" as const,
+        unicodeBidi: "isolate" as const,
+        writingMode: "horizontal-tb" as const,
+      }
+    : {
+        direction: "ltr" as const,
+        textAlign: "left" as const,
+      };
+
   return (
     <Component
       {...props}
       dir={direction}
       className={cn(
-        `text-${textAlign === "right" ? "right" : "left"}`,
+        isRTL ? "!text-right !direction-rtl" : "!text-left !direction-ltr",
         direction === "rtl" ? "rtl-content" : "ltr-content",
         className,
       )}
       style={{
-        direction,
-        textAlign,
+        ...forcedStyles,
         ...props.style,
       }}
     >
