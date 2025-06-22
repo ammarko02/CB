@@ -121,28 +121,10 @@ export function Navigation() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link
-            to={getDefaultRoute(user.role)}
-            className="flex items-center gap-2 font-bold text-lg"
-          >
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">
-                HP
-              </span>
-            </div>
-            {t("app.title")}
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:block">
-            <NavItems />
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex flex-col">
+      <div className="container flex justify-between w-full h-16 items-center">
+        {/* User Controls - Right Side */}
+        <div className="flex items-center gap-4 flex-wrap">
           {/* Language Switcher */}
           <LanguageSwitcher />
 
@@ -222,6 +204,26 @@ export function Navigation() {
               </div>
             </SheetContent>
           </Sheet>
+        </div>
+
+        {/* Main Navigation - Left Side */}
+        <div className="flex gap-6 flex-wrap">
+          <Link
+            to={getDefaultRoute(user.role)}
+            className="flex items-center gap-2 font-bold text-lg"
+          >
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-primary-foreground text-sm font-bold">
+                HP
+              </span>
+            </div>
+            {t("app.title")}
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:block">
+            <NavItems />
+          </nav>
         </div>
       </div>
     </header>
