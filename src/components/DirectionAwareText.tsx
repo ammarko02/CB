@@ -50,7 +50,9 @@ export function DirectionAwareText({
       {...props}
       dir={direction}
       className={cn(
-        isRTL ? "!text-right !direction-rtl" : "!text-left !direction-ltr",
+        isRTL
+          ? "force-text-right force-direction-rtl"
+          : "force-text-left force-direction-ltr",
         direction === "rtl" ? "rtl-content" : "ltr-content",
         className,
       )}
