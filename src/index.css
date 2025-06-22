@@ -343,21 +343,21 @@ html[dir="rtl"] body *:after,
 }
 
 /* Force important overrides */
-.!text-right {
+.force-text-right {
   text-align: right !important;
 }
 
-.!text-left {
+.force-text-left {
   text-align: left !important;
 }
 
-.!direction-rtl {
+.force-direction-rtl {
   direction: rtl !important;
   text-align: right !important;
   unicode-bidi: isolate !important;
 }
 
-.!direction-ltr {
+.force-direction-ltr {
   direction: ltr !important;
   text-align: left !important;
 }
