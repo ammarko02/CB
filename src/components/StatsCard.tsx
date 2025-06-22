@@ -3,9 +3,9 @@ import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
-  title: string;
-  value: string | number;
-  description?: string;
+  title: React.ReactNode;
+  value: string;
+  description?: React.ReactNode;
   icon?: LucideIcon;
   trend?: {
     value: number;
@@ -22,31 +22,41 @@ export function StatsCard({
   trend,
   className,
 }: StatsCardProps) {
+  const { isRTL } = useLanguage();
+
   return (
-    <Card className={cn("", className)}>
-      <CardHeader className="flex justify-between flex-wrap space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+    <Card className={cn("", className)} dir={isRTL ? "rtl" : "ltr"}>
+      <CardHeader className={cn("flex justify-between flex-wrap space-y-0 pb-2", isRTL ? "flex-row-reverse" : "flex-row")}>
+        <CardTitle className={cn("text-sm font-medium", isRTL ? "text-right" : "text-left")}>
+          <DirectionAwareText>{title}</DirectionAwareText>
+        </CardTitle>
         {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+      <CardContent className={cn(isRTL ? "text-right" : "text-left")}>
+        <DirectionAwareText className="text-2xl font-bold ltr-content">
+          {value}
+        </DirectionAwareText>
         {(description || trend) && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className={cn("flex items-center gap-2 text-xs text-muted-foreground", isRTL ? "flex-row-reverse justify-end" : "flex-row")}>
             {trend && (
-              <span
+              <DirectionAwareText
                 className={cn(
                   "flex items-center",
                   trend.isPositive ? "text-green-600" : "text-red-600",
                 )}
               >
-                {trend.isPositive ? "+" : ""}
-                {trend.value}%
-              </span>
+                {trend.isPositive ? "↗" : "↘"} {Math.abs(trend.value)}%
+              </DirectionAwareText>
             )}
-            {description && <span>{description}</span>}
+            {description && (
+              <DirectionAwareText>
+                {description}
+              </DirectionAwareText>
+            )}
           </div>
         )}
       </CardContent>
     </Card>
   );
+}
 }
