@@ -454,13 +454,15 @@ export default function HRReports() {
                         </div>
                       </div>
                       <div className="mt-3 pt-3 border-t border-gray-200">
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Eye className="w-4 h-4 text-muted-foreground" />
-                            {(offer.views || 0).toLocaleString("ar-SA")}
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <ShoppingCart className="w-4 h-4 text-muted-foreground" />
-                            {(offer.redemptions || 0).toLocaleString("ar-SA")}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Eye className="w-4 h-4 text-muted-foreground" />
+                              {(offer?.views || 0).toLocaleString("ar-SA")}
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                              {(offer?.redemptions || 0).toLocaleString("ar-SA")}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -531,7 +533,7 @@ export default function HRReports() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="w-5 h-5" />
-                تقرير أداء العروض التفصيلي
+                تقرير أداء العروض ��لتفصيلي
               </CardTitle>
               <CardDescription>
                 إحصائيات العروض الأكثر نجاحاً والأكثر مشاهدة
@@ -558,7 +560,7 @@ export default function HRReports() {
                       <TableHead>المشاهدات</TableHead>
                       <TableHead>الاستبدالات</TableHead>
                       <TableHead>معدل التحويل</TableHead>
-                      <TableHead>الإيرادات</TableHead>
+                      <TableHead>الإير��دات</TableHead>
                       <TableHead>الحالة</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -868,7 +870,7 @@ export default function HRReports() {
                       </span>
                     </div>
                     <p className="text-sm text-purple-700">
-                      إضافة موردين ج��د في فئات مختلفة لتنويع العروض المتاحة
+                      إضافة موردين جدد في فئات مختلفة لتنويع العروض المتاحة
                     </p>
                   </div>
 
@@ -880,7 +882,7 @@ export default function HRReports() {
                       </span>
                     </div>
                     <p className="text-sm text-indigo-700">
-                      تحليل أعمق لتفضيلات الموظفين حسب الأقسام والفئات العمرية
+                      تحليل أعمق لتفضيلات ال��وظفين حسب الأقسام والفئات العمرية
                     </p>
                   </div>
                 </div>
