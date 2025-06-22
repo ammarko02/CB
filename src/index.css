@@ -229,6 +229,34 @@ html[dir="rtl"]
   text-align: right !important;
 }
 
+/* Force RTL text direction on all possible text elements */
+[dir="rtl"] * {
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Specific overrides for card components and text */
+[dir="rtl"] .card-title,
+[dir="rtl"] .card-description,
+[dir="rtl"] .card-header *,
+[dir="rtl"] .card-content *,
+[dir="rtl"] .text-muted-foreground,
+[dir="rtl"] .font-bold,
+[dir="rtl"] .font-semibold,
+[dir="rtl"] .font-medium {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Override any conflicting styles */
+[dir="rtl"] .container *,
+[dir="rtl"] .space-y-6 *,
+[dir="rtl"] .grid * {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
 /* Force RTL on all common UI elements */
 [dir="rtl"] .text-left,
 [dir="rtl"] .text-start {
