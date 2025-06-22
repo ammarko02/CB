@@ -143,6 +143,11 @@ const enTranslations = {
     latestRedemptions: "Your latest redemptions",
     noRedemptions: "No redemptions yet",
     commonTasks: "Common tasks and shortcuts",
+    dashboardTitle: "Dashboard",
+    userManagement: "User Management",
+    offerManagement: "Offer Management",
+    departmentManagement: "Department Management",
+    reportsAndAnalytics: "Reports & Analytics",
   },
   offers: {
     title: "Offers",
@@ -325,7 +330,7 @@ const arTranslations = {
     help: "المساعدة",
     logout: "تسجيل الخروج",
     login: "تسجيل الدخول",
-    register: "التسجيل",
+    register: "التسج��ل",
     language: "اللغة",
     english: "English",
     arabic: "العربية",
@@ -347,7 +352,7 @@ const arTranslations = {
     loginFailed: "فشل تسجيل الدخول",
     registrationFailed: "فشل التسجيل",
     loggedOut: "تم تسجيل الخروج",
-    loggedOutSuccess: "تم تسجيل خروجك بنجاح",
+    loggedOutSuccess: "تم تس��يل خروجك بنجاح",
     accountCreated: "تم إنشاء الحساب!",
     accountCreatedSuccess: "تم إنشاء حسابك بنجاح",
     demoAccounts: "حسابات تجريبية",
@@ -355,10 +360,10 @@ const arTranslations = {
     useAccount: "استخدام الحساب",
   },
   app: {
-    title: "مركز المزايا السعيد",
+    title: "مركز المزايا",
     subtitle: "منصة إدارة مزايا الموظفين",
     description: "اكتشف المزايا والمكافآت الرائعة المخصصة لك",
-    copyright: "© 2024 مركز المزايا السعيد. جميع الحقوق محفوظة.",
+    copyright: "© 2024 مركز المزايا. جميع الحقوق محفوظة.",
   },
   navigation: {
     dashboard: "لوحة التحكم",
@@ -374,9 +379,8 @@ const arTranslations = {
     browseOffers: "تصفح العروض",
     myRedemptions: "عمليات الاستبدال",
     favorites: "المفضلة",
-    analytics: "التحليلات",
     profileSettings: "إعدادات الملف الشخصي",
-    helpSupport: "المساعدة والدعم",
+    helpSupport: "المساعدة والدع��",
   },
   dashboard: {
     totalUsers: "إجمالي المستخدمين",
@@ -391,7 +395,7 @@ const arTranslations = {
     manageOffers: "إدارة العروض",
     viewAnalytics: "عرض التحليلات",
     manageUsers: "إدارة المستخدمين",
-    addEmployee: "إضاف�� موظف",
+    addEmployee: "إضافة موظف",
     createNewOffer: "إنشاء عرض جديد",
     pointsBalance: "رصيد النقاط",
     availablePoints: "النقاط المتاحة",
@@ -404,12 +408,17 @@ const arTranslations = {
     checkBackLater: "تحقق لاحقاً من العروض الجديدة المثيرة!",
     yourPoints: "نقاطك",
     pointsAvailable: "النقاط المتاحة للإنفاق",
-    pointsUntilNext: "{{points}} نقطة أخرى حتى مستوى المكافأة الت��لي",
+    pointsUntilNext: "{{points}} نقطة أخرى حتى مستوى المكافأة التالي",
     maxLevelReached: "تم الوصول للمستوى الأقصى!",
     dontMissOffers: "لا تفوت هذه العروض!",
     latestRedemptions: "عمليات الاستبدال الأخيرة",
     noRedemptions: "لا توجد عمليات استبدال بعد",
     commonTasks: "المهام الشائعة والاختصارات",
+    dashboardTitle: "لوحة التحكم",
+    userManagement: "إدارة المستخدمين",
+    offerManagement: "إدارة العروض",
+    departmentManagement: "إدارة الأقسام",
+    reportsAndAnalytics: "التقارير والتحليلات",
   },
   offers: {
     title: "العروض",
@@ -487,7 +496,7 @@ const arTranslations = {
     expiredOffers: "العروض المنتهية",
     copyCode: "نسخ الكود",
     codeGenerated: "تم إنشاء الكود",
-    usageOnce: "للاستخدام مرة واحدة",
+    usageOnce: "للاستخدام مرة و��حدة",
     multipleUsage: "للاستخدام المتعدد",
   },
   categories: {
@@ -529,7 +538,7 @@ const arTranslations = {
     expand: "توسيع",
     collapse: "طي",
     fullscreen: "ملء الشاشة",
-    exitFullscreen: "خروج من ملء الشاشة",
+    exitFullscreen: "خرو�� من ملء الشاشة",
     copy: "نسخ",
     copied: "تم النسخ",
     share: "مشاركة",
@@ -558,7 +567,7 @@ const arTranslations = {
     accessDenied: "الوصول مرفوض",
     noPermission: "ليس لديك صلاحية للوصول إلى هذه الصفحة",
     contactAdmin: "يرجى الاتصال بالمشرف إذا كنت تعتقد أن هذا خطأ",
-    currentRole: "الدور الحالي",
+    currentRole: "الدور الح��لي",
     goToDashboard: "الذهاب إلى لوحة التحكم",
     signOut: "تسجيل الخروج",
     pageNotFound: "الصفحة غير موجودة",
@@ -699,25 +708,44 @@ i18n
     },
   });
 
+// Enhanced function to set document direction and language
+const setDocumentDirection = (lang: string) => {
+  const isArabic = lang === "ar";
+
+  // Set document attributes
+  document.documentElement.dir = isArabic ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+
+  // Set body attributes
+  if (document.body) {
+    document.body.dir = isArabic ? "rtl" : "ltr";
+    document.body.setAttribute("data-language", lang);
+
+    // Add/remove RTL classes
+    if (isArabic) {
+      document.documentElement.classList.add("rtl");
+      document.body.classList.add("rtl");
+    } else {
+      document.documentElement.classList.remove("rtl");
+      document.body.classList.remove("rtl");
+    }
+  }
+};
+
 // Set initial document direction
 const currentLang = i18n.language || localStorage.getItem("i18nextLng") || "en";
-if (currentLang === "ar") {
-  document.documentElement.dir = "rtl";
-  document.documentElement.lang = "ar";
-} else {
-  document.documentElement.dir = "ltr";
-  document.documentElement.lang = "en";
-}
+setDocumentDirection(currentLang);
 
 // Listen for language changes
-i18n.on("languageChanged", (lng) => {
-  if (lng === "ar") {
-    document.documentElement.dir = "rtl";
-    document.documentElement.lang = "ar";
-  } else {
-    document.documentElement.dir = "ltr";
-    document.documentElement.lang = "en";
-  }
-});
+i18n.on("languageChanged", setDocumentDirection);
+
+// Also set direction when DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    setDocumentDirection(i18n.language || "en");
+  });
+} else {
+  setDocumentDirection(i18n.language || "en");
+}
 
 export default i18n;

@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { User } from "@/types";
 import { userService, analyticsService } from "@/services/api";
 import { StatsCard } from "@/components/StatsCard";
+import {
+  DirectionAwareText,
+  DirectionAwareHeading,
+} from "@/components/DirectionAwareText";
+import { TranslatedText, TranslatedHeading } from "@/components/TranslatedText";
 import {
   Card,
   CardContent,
@@ -21,17 +27,29 @@ import {
   Calendar,
   ArrowUpRight,
   UserCheck,
+  Package,
+  BarChart3,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function HRDashboard() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const navigate = useNavigate();
-  const [employees, setEmployees] = useState<User[]>([]);
-  const [stats, setStats] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalEmployees: 0,
+    activeEmployees: 0,
+    newEmployeesThisMonth: 0,
+    totalDepartments: 0,
+    pendingApprovals: 0,
+    totalRedemptions: 0,
+  });
+
+  const [recentEmployees, setRecentEmployees] = useState<User[]>([]);
 
   useEffect(() => {
     loadDashboardData();
@@ -40,18 +58,49 @@ export default function HRDashboard() {
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
-      const [employeesResponse, statsResponse] = await Promise.all([
-        userService.getUsers({ role: "employee" }),
-        analyticsService.getDashboardStats(),
-      ]);
 
-      setEmployees(employeesResponse.data);
-      setStats(statsResponse.data);
+      // Simulate API calls
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setStats({
+        totalEmployees: 245,
+        activeEmployees: 238,
+        newEmployeesThisMonth: 12,
+        totalDepartments: 8,
+        pendingApprovals: 5,
+        totalRedemptions: 1540,
+      });
+
+      setRecentEmployees([
+        {
+          id: "1",
+          firstName: "أحمد",
+          lastName: "محمد",
+          email: "ahmed.mohamed@company.com",
+          role: "employee",
+          department: "engineering",
+          status: "active",
+          createdAt: "2024-01-15T10:00:00Z",
+          pointsBalance: 1200,
+        },
+        {
+          id: "2",
+          firstName: "فاطمة",
+          lastName: "علي",
+          email: "fatima.ali@company.com",
+          role: "employee",
+          department: "marketing",
+          status: "active",
+          createdAt: "2024-01-14T09:30:00Z",
+          pointsBalance: 850,
+        },
+      ]);
     } catch (error) {
-      console.error("Failed to load dashboard data:", error);
       toast({
-        title: t("notifications.error"),
-        description: t("errors.loadingFailed"),
+        title: isRTL ? "خطأ في التحميل" : "Loading Error",
+        description: isRTL
+          ? "فشل في تحميل بيانات لوحة التحكم"
+          : "Failed to load dashboard data",
         variant: "destructive",
       });
     } finally {
@@ -59,35 +108,54 @@ export default function HRDashboard() {
     }
   };
 
-  // Calculate HR-specific stats
-  const totalEmployees = employees.length;
-  const activeEmployees = employees.filter((emp) => emp.isActive).length;
-  const recentJoins = employees.filter((emp) => {
-    const joinDate = new Date(emp.joinDate);
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    return joinDate > thirtyDaysAgo;
-  }).length;
-
-  // Group employees by department
-  const departmentStats = employees.reduce(
-    (acc, emp) => {
-      const dept = emp.department || "Unassigned";
-      acc[dept] = (acc[dept] || 0) + 1;
-      return acc;
+  const quickActions = [
+    {
+      title: isRTL ? "إضافة موظف جديد" : "Add New Employee",
+      description: isRTL
+        ? "إنشاء حساب موظف جديد"
+        : "Create a new employee account",
+      icon: UserPlus,
+      action: () => navigate("/hr/employees"),
+      color: "blue",
     },
-    {} as Record<string, number>,
-  );
-
-  const recentEmployees = employees
-    .sort(
-      (a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime(),
-    )
-    .slice(0, 5);
+    {
+      title: isRTL ? "إدارة الأقسام" : "Manage Departments",
+      description: isRTL
+        ? "تنظيم وإدارة أقسام الشركة"
+        : "Organize and manage company departments",
+      icon: Building,
+      action: () => navigate("/hr/departments"),
+      color: "green",
+    },
+    {
+      title: isRTL ? "عرض التقارير" : "View Reports",
+      description: isRTL
+        ? "تقارير شاملة عن الأداء"
+        : "Comprehensive performance reports",
+      icon: BarChart3,
+      action: () => navigate("/hr/reports"),
+      color: "purple",
+    },
+    {
+      title: isRTL ? "التحليلات" : "Analytics",
+      description: isRTL
+        ? "رؤى تفصيلية عن الاستخدام"
+        : "Detailed usage insights",
+      icon: Activity,
+      action: () => navigate("/hr/analytics"),
+      color: "orange",
+    },
+  ];
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div
+        className={cn(
+          "container mx-auto p-6 space-y-6",
+          isRTL ? "rtl-content" : "ltr-content",
+        )}
+        dir={isRTL ? "rtl" : "ltr"}
+      >
         <div className="space-y-2">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-4 w-96" />
@@ -106,23 +174,45 @@ export default function HRDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div
+      className={cn(
+        "container mx-auto p-6 space-y-6",
+        isRTL ? "rtl-content" : "ltr-content",
+      )}
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">
-            {t("navigation.dashboard")} - {t("roles.hr")}
-          </h1>
-          <p className="text-muted-foreground">
-            إدارة الموظفين ومراقبة تحليلات القوى العاملة
-          </p>
+      <div
+        className={cn(
+          "flex items-center",
+          isRTL ? "flex-row-reverse justify-between" : "justify-between",
+        )}
+      >
+        <div className={cn(isRTL ? "text-right" : "text-left")}>
+          <DirectionAwareHeading level={1} className="text-3xl font-bold">
+            <TranslatedText tKey="navigation.dashboard" />
+          </DirectionAwareHeading>
+          <DirectionAwareText className="text-muted-foreground">
+            إدارة شاملة لنظام المزايا والموظفين
+          </DirectionAwareText>
         </div>
-        <div className="flex gap-2 mt-4 sm:mt-0">
-          <Button onClick={() => navigate("/hr/employees")}>
-            <UserPlus
-              className={`w-4 h-4 ${i18n.language === "ar" ? "ml-2" : "mr-2"}`}
-            />
-            {t("dashboard.addEmployee")}
+        <div
+          className={cn("flex gap-2", isRTL ? "flex-row-reverse" : "flex-row")}
+        >
+          <Button
+            onClick={() => navigate("/hr/employees")}
+            className={cn(isRTL ? "flex-row-reverse" : "flex-row")}
+          >
+            <UserPlus className={cn("w-4 h-4", isRTL ? "ml-2" : "mr-2")} />
+            <TranslatedText tKey="dashboard.addEmployee" />
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/hr/reports")}
+            className={cn(isRTL ? "flex-row-reverse" : "flex-row")}
+          >
+            <BarChart3 className={cn("w-4 h-4", isRTL ? "ml-2" : "mr-2")} />
+            <TranslatedText tKey="dashboard.viewAnalytics" />
           </Button>
         </div>
       </div>
@@ -130,297 +220,187 @@ export default function HRDashboard() {
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="إجمالي الموظفين"
-          value={totalEmployees}
-          description="جميع الموظفين"
+          title={<TranslatedText tKey="dashboard.totalUsers" />}
+          value={stats.totalEmployees.toLocaleString(isRTL ? "ar-SA" : "en-US")}
+          description={<TranslatedText tKey="dashboard.activeEmployees" />}
           icon={Users}
+          trend={{
+            value: 8.2,
+            isPositive: true,
+          }}
         />
         <StatsCard
-          title={t("dashboard.activeEmployees")}
-          value={activeEmployees}
-          description="النشطون حالياً"
+          title={<TranslatedText tKey="dashboard.activeEmployees" />}
+          value={stats.activeEmployees.toLocaleString(
+            isRTL ? "ar-SA" : "en-US",
+          )}
+          description={<TranslatedText tKey="dashboard.thisMonth" />}
           icon={UserCheck}
-          className="bg-green-50 border-green-200"
         />
         <StatsCard
-          title="الموظفون الجدد"
-          value={recentJoins}
-          description="آخر 30 يوماً"
+          title={<TranslatedText tKey="dashboard.pendingOffers" />}
+          value={stats.pendingApprovals.toLocaleString(
+            isRTL ? "ar-SA" : "en-US",
+          )}
+          description={<TranslatedText tKey="dashboard.totalOffers" />}
+          icon={Package}
+          trend={{
+            value: 12.5,
+            isPositive: false,
+          }}
+        />
+        <StatsCard
+          title={<TranslatedText tKey="dashboard.totalRedemptions" />}
+          value={stats.totalRedemptions.toLocaleString(
+            isRTL ? "ar-SA" : "en-US",
+          )}
+          description={<TranslatedText tKey="dashboard.thisMonth" />}
           icon={TrendingUp}
-          trend={{ value: 15, isPositive: true }}
-        />
-        <StatsCard
-          title="الأقسام"
-          value={Object.keys(departmentStats).length}
-          description="الأقسام النشطة"
-          icon={Building}
+          trend={{
+            value: 15.3,
+            isPositive: true,
+          }}
         />
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Recent Employees */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>الموظفون الجدد</CardTitle>
-                <CardDescription>آخر الموظفين المضافين</CardDescription>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/hr/employees")}
-              >
-                {t("common.viewAll")}
-                <ArrowUpRight
-                  className={`w-4 h-4 ${i18n.language === "ar" ? "mr-1" : "ml-1"}`}
-                />
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {recentEmployees.length === 0 ? (
-                <div className="text-center py-12">
-                  <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">
-                    لا يوجد موظفون بعد
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    أضف موظفك الأول للبدء
-                  </p>
-                  <Button onClick={() => navigate("/hr/employees")}>
-                    <UserPlus
-                      className={`w-4 h-4 ${i18n.language === "ar" ? "ml-2" : "mr-2"}`}
-                    />
-                    {t("dashboard.addEmployee")}
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {recentEmployees.map((employee) => (
-                    <div
-                      key={employee.id}
-                      className="flex items-center justify-between p-4 rounded-lg border"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-semibold">
-                            {employee.firstName[0]}
-                            {employee.lastName[0]}
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="font-medium">
-                            {employee.firstName} {employee.lastName}
-                          </h4>
-                          <p className="text-sm text-muted-foreground">
-                            {employee.email}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            {employee.department && (
-                              <Badge variant="outline" className="text-xs">
-                                {employee.department}
-                              </Badge>
-                            )}
-                            <Badge
-                              variant={
-                                employee.isActive ? "default" : "secondary"
-                              }
-                              className="text-xs"
-                            >
-                              {employee.isActive
-                                ? t("common.active")
-                                : t("common.inactive")}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
-                          انضم في{" "}
-                          {new Date(employee.joinDate).toLocaleDateString(
-                            "ar-SA",
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Department Distribution */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building className="w-5 h-5" />
-                توزيع الأقسام
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {Object.entries(departmentStats)
-                  .sort(([, a], [, b]) => b - a)
-                  .map(([department, count]) => {
-                    const percentage = Math.round(
-                      (count / totalEmployees) * 100,
-                    );
-                    return (
-                      <div key={department} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">
-                            {department}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {count} ({percentage}%)
-                          </span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div
-                            className="bg-primary h-2 rounded-full"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Stats */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5" />
-                إحصائيات سريعة
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  متوسط سنوات الخدمة
-                </span>
-                <span className="font-semibold">2.3 سنة</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  رضا الموظفين
-                </span>
-                <span className="font-semibold">4.2/5</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  معدل المشاركة
-                </span>
-                <span className="font-semibold">78%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  معدل الاحتفاظ
-                </span>
-                <span className="font-semibold">85%</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("dashboard.recentActivity")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  {
-                    action: "تم تسجيل موظف جديد",
-                    user: "أليس جونسون",
-                    time: "منذ ساعتين",
-                  },
-                  {
-                    action: "تم تحديث القسم",
-                    user: "جون سميث",
-                    time: "منذ 4 ساعات",
-                  },
-                  {
-                    action: "تم تغيير الدور",
-                    user: "سارة د��فيس",
-                    time: "منذ يوم واحد",
-                  },
-                ].map((activity, index) => (
+      {/* Two Column Layout */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <DirectionAwareText as="h3" className="text-xl font-semibold">
+              <TranslatedText tKey="dashboard.quickActions" />
+            </DirectionAwareText>
+            <DirectionAwareText className="text-muted-foreground">
+              <TranslatedText tKey="dashboard.commonTasks" />
+            </DirectionAwareText>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4">
+              {quickActions.map((action, index) => (
+                <Card
+                  key={index}
+                  className="p-4 cursor-pointer hover:bg-accent transition-colors"
+                  onClick={action.action}
+                >
                   <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 rounded-lg border"
+                    className={cn(
+                      "flex items-center gap-4",
+                      isRTL ? "flex-row-reverse" : "flex-row",
+                    )}
                   >
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Activity className="w-4 h-4 text-blue-600" />
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center bg-${action.color}-100`}
+                    >
+                      <action.icon
+                        className={`w-5 h-5 text-${action.color}-600`}
+                      />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.action}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.user} • {activity.time}
-                      </p>
+                    <div
+                      className={cn(
+                        "flex-1",
+                        isRTL ? "text-right" : "text-left",
+                      )}
+                    >
+                      <DirectionAwareText className="font-medium">
+                        {action.title}
+                      </DirectionAwareText>
+                      <DirectionAwareText className="text-sm text-muted-foreground">
+                        {action.description}
+                      </DirectionAwareText>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Employees */}
+        <Card>
+          <CardHeader
+            className={cn(
+              "flex",
+              isRTL ? "flex-row-reverse justify-between" : "justify-between",
+            )}
+          >
+            <div>
+              <DirectionAwareText as="h3" className="text-xl font-semibold">
+                <TranslatedText tKey="dashboard.recentActivity" />
+              </DirectionAwareText>
+              <DirectionAwareText className="text-muted-foreground">
+                الموظفون الجدد هذا الشهر
+              </DirectionAwareText>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/hr/employees")}
+              className={cn(isRTL ? "flex-row-reverse" : "flex-row")}
+            >
+              <TranslatedText tKey="common.viewAll" />
+              <ArrowUpRight
+                className={cn("w-4 h-4", isRTL ? "mr-1" : "ml-1")}
+              />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentEmployees.map((employee) => (
+                <div
+                  key={employee.id}
+                  className={cn(
+                    "flex items-center gap-4 p-3 rounded-lg border",
+                    isRTL ? "flex-row-reverse" : "flex-row",
+                  )}
+                >
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <DirectionAwareText className="text-sm font-semibold text-blue-600">
+                      {employee.firstName[0]}
+                      {employee.lastName[0]}
+                    </DirectionAwareText>
+                  </div>
+                  <div
+                    className={cn("flex-1", isRTL ? "text-right" : "text-left")}
+                  >
+                    <DirectionAwareText className="font-medium">
+                      {employee.firstName} {employee.lastName}
+                    </DirectionAwareText>
+                    <DirectionAwareText className="text-sm text-muted-foreground">
+                      {employee.email}
+                    </DirectionAwareText>
+                    <div
+                      className={cn(
+                        "flex items-center gap-2 mt-1",
+                        isRTL ? "flex-row-reverse justify-end" : "flex-row",
+                      )}
+                    >
+                      <Badge variant="outline">
+                        <TranslatedText
+                          tKey={`departments.${employee.department}`}
+                        />
+                      </Badge>
+                      <DirectionAwareText className="text-xs text-muted-foreground ltr-content">
+                        {employee.pointsBalance?.toLocaleString(
+                          isRTL ? "ar-SA" : "en-US",
+                        )}{" "}
+                        {isRTL ? "نقطة" : "pts"}
+                      </DirectionAwareText>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                  <Badge
+                    variant="default"
+                    className="bg-green-100 text-green-800"
+                  >
+                    <TranslatedText tKey="common.active" />
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("dashboard.quickActions")}</CardTitle>
-          <CardDescription>
-            المهام الشائعة للموارد البشرية والاختصارات
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2"
-              onClick={() => navigate("/hr/employees")}
-            >
-              <UserPlus className="w-6 h-6" />
-              <span>{t("dashboard.addEmployee")}</span>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2"
-              onClick={() => navigate("/hr/employees")}
-            >
-              <Users className="w-6 h-6" />
-              <span>إدارة الموظفين</span>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2"
-              onClick={() => navigate("/hr/reports")}
-            >
-              <TrendingUp className="w-6 h-6" />
-              <span>عرض التقارير</span>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2"
-              onClick={() => navigate("/profile")}
-            >
-              <Calendar className="w-6 h-6" />
-              <span>{t("common.profile")}</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

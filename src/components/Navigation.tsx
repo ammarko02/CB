@@ -1,9 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { NAVIGATION_ITEMS } from "@/lib/constants";
 import { getDefaultRoute } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MessageCenter } from "@/components/MessageCenter";
+import { DirectionAwareText } from "@/components/DirectionAwareText";
+import { TranslatedText } from "@/components/TranslatedText";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
@@ -58,6 +61,7 @@ const iconMap = {
 export function Navigation() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +80,27 @@ export function Navigation() {
     setIsOpen(false);
   };
 
+  // Translation mapping for navigation items
+  const getTranslatedLabel = (label: string) => {
+    const labelMap: { [key: string]: string } = {
+      Dashboard: t("navigation.dashboard"),
+      "Offers Approval": t("navigation.offersApproval"),
+      Analytics: t("navigation.analytics"),
+      Users: t("navigation.users"),
+      Suppliers: t("navigation.suppliers"),
+      Employees: t("navigation.employees"),
+      Reports: t("navigation.reports"),
+      Departments: t("navigation.departments"),
+      "My Offers": t("navigation.myOffers"),
+      "Create Offer": t("navigation.createOffer"),
+      "Browse Offers": t("navigation.browseOffers"),
+      "My Redemptions": t("navigation.myRedemptions"),
+      "My Coupons": t("navigation.myRedemptions"),
+      Favorites: t("navigation.favorites"),
+    };
+    return labelMap[label] || label;
+  };
+
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
     <div
       className={cn("flex gap-2", mobile ? "flex-col space-y-2" : "flex-row")}
@@ -92,7 +117,10 @@ export function Navigation() {
             onClick={() => handleNavigation(item.path)}
           >
             <Icon className="h-4 w-4" />
-            {item.label}
+            <TranslatedText
+              tKey={`navigation.${item.label.toLowerCase().replace(" ", "")}`}
+              fallback={getTranslatedLabel(item.label)}
+            />
           </Button>
         );
       })}
@@ -100,28 +128,10 @@ export function Navigation() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link
-            to={getDefaultRoute(user.role)}
-            className="flex items-center gap-2 font-bold text-lg"
-          >
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">
-                HP
-              </span>
-            </div>
-            {t("app.title")}
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:block">
-            <NavItems />
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex flex-col">
+      <div className="container flex justify-between w-full h-16 items-center">
+        {/* User Controls - Right Side */}
+        <div className="flex items-center gap-4 flex-wrap">
           {/* Language Switcher */}
           <LanguageSwitcher />
 
@@ -157,8 +167,8 @@ export function Navigation() {
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.email}
                   </p>
-                  <p className="text-xs leading-none text-muted-foreground capitalize">
-                    {user.role.replace("_", " ")}
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {t(`roles.${user.role}`)}
                   </p>
                 </div>
               </DropdownMenuLabel>
@@ -171,7 +181,7 @@ export function Navigation() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="ltr:mr-2 rtl:ml-2 h-4 w-4" />
                 <span>{t("common.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -193,7 +203,7 @@ export function Navigation() {
                       HP
                     </span>
                   </div>
-                  <span className="font-bold">Happy Perks Hub</span>
+                  <span className="font-bold">{t("app.title")}</span>
                 </div>
                 <nav>
                   <NavItems mobile />
@@ -201,6 +211,26 @@ export function Navigation() {
               </div>
             </SheetContent>
           </Sheet>
+        </div>
+
+        {/* Main Navigation - Left Side */}
+        <div className="flex gap-6 flex-wrap">
+          <Link
+            to={getDefaultRoute(user.role)}
+            className="flex items-center gap-2 font-bold text-lg"
+          >
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-primary-foreground text-sm font-bold">
+                HP
+              </span>
+            </div>
+            <TranslatedText tKey="app.title" />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:block">
+            <NavItems />
+          </nav>
         </div>
       </div>
     </header>
