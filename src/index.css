@@ -10,6 +10,21 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
+    /* RTL/LTR Custom Properties */
+    --direction: ltr;
+    --text-align: left;
+    --text-align-reverse: right;
+    --margin-start: margin-left;
+    --margin-end: margin-right;
+    --padding-start: padding-left;
+    --padding-end: padding-right;
+    --border-start: border-left;
+    --border-end: border-right;
+    --start: left;
+    --end: right;
+    --font-family:
+      "Inter", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
+
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
 
@@ -886,4 +901,75 @@ body[dir="rtl"],
 .rtl-content * {
   direction: rtl !important;
   text-align: right !important;
+}
+
+/* Utility classes using CSS custom properties */
+.dir-aware {
+  direction: var(--direction);
+  text-align: var(--text-align);
+}
+
+.text-start {
+  text-align: var(--text-align);
+}
+
+.text-end {
+  text-align: var(--text-align-reverse);
+}
+
+.ms-auto {
+  margin-inline-start: auto;
+}
+
+.me-auto {
+  margin-inline-end: auto;
+}
+
+.ps-2 {
+  padding-inline-start: 0.5rem;
+}
+
+.pe-2 {
+  padding-inline-end: 0.5rem;
+}
+
+.ps-4 {
+  padding-inline-start: 1rem;
+}
+
+.pe-4 {
+  padding-inline-end: 1rem;
+}
+
+/* RTL-aware flex utilities */
+.flex-start {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .flex-start {
+  justify-content: flex-end;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .flex-end {
+  justify-content: flex-start;
+}
+
+/* Font family based on direction */
+body {
+  font-family: var(--font-family);
+}
+
+/* RTL layout specific styles */
+.rtl-layout {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr-layout {
+  direction: ltr;
+  text-align: left;
 }
