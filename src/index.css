@@ -329,6 +329,39 @@ html[dir="rtl"] body *:after,
   unicode-bidi: isolate !important;
 }
 
+/* Utility classes for forcing text direction */
+.direction-rtl {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+.direction-ltr {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+}
+
+/* Force important overrides */
+.!text-right {
+  text-align: right !important;
+}
+
+.!text-left {
+  text-align: left !important;
+}
+
+.!direction-rtl {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+.!direction-ltr {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
 /* Force RTL on all common UI elements */
 [dir="rtl"] .text-left,
 [dir="rtl"] .text-start {
