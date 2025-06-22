@@ -22,29 +22,48 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
       // Update document direction and language
       const isArabic = lng === "ar";
-      document.documentElement.dir = isArabic ? "rtl" : "ltr";
-      document.documentElement.lang = lng;
+      const direction = isArabic ? "rtl" : "ltr";
 
-      // Also update body attributes for consistent styling
-      document.body.dir = isArabic ? "rtl" : "ltr";
+      // Force update all direction-related attributes
+      document.documentElement.dir = direction;
+      document.documentElement.lang = lng;
+      document.documentElement.setAttribute("data-direction", direction);
+
+      // Update body with comprehensive RTL/LTR support
+      document.body.dir = direction;
       document.body.setAttribute("data-language", lng);
-      document.body.style.direction = isArabic ? "rtl" : "ltr";
+      document.body.setAttribute("data-direction", direction);
+      document.body.style.direction = direction;
       document.body.style.textAlign = isArabic ? "right" : "left";
 
-      // Add/remove RTL class on document element and all containers
+      // Add/remove direction classes
       if (isArabic) {
         document.documentElement.classList.add("rtl");
+        document.documentElement.classList.remove("ltr");
         document.body.classList.add("rtl");
-        document.documentElement.setAttribute("data-rtl", "true");
-        // Force refresh of styles
-        document.body.offsetHeight;
+        document.body.classList.remove("ltr");
       } else {
+        document.documentElement.classList.add("ltr");
         document.documentElement.classList.remove("rtl");
+        document.body.classList.add("ltr");
         document.body.classList.remove("rtl");
-        document.documentElement.removeAttribute("data-rtl");
-        document.body.style.direction = "ltr";
-        document.body.style.textAlign = "left";
       }
+
+      // Force re-render of all styled components
+      const event = new CustomEvent("directionchange", {
+        detail: { direction, language: lng, isRTL: isArabic },
+      });
+      document.dispatchEvent(event);
+
+      // Force style recalculation
+      document.body.offsetHeight;
+
+      // Update CSS custom properties for direction
+      document.documentElement.style.setProperty("--text-direction", direction);
+      document.documentElement.style.setProperty(
+        "--text-align",
+        isArabic ? "right" : "left",
+      );
     };
 
     i18n.on("languageChanged", handleLanguageChange);
