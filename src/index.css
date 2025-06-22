@@ -610,6 +610,43 @@ body[dir="rtl"],
   text-align: right;
 }
 
+/* Enhanced card layouts for RTL */
+[dir="rtl"] .card-flex {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+[dir="rtl"] .offer-card {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+[dir="rtl"] .offer-badges {
+  justify-content: flex-end !important;
+}
+
+[dir="rtl"] .offer-price {
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+[dir="rtl"] .offer-location {
+  justify-content: flex-end !important;
+}
+
+[dir="rtl"] .offer-stats {
+  justify-content: flex-end !important;
+}
+
+/* Navigation improvements for RTL */
+[dir="rtl"] .nav-header {
+  flex-direction: column !important;
+}
+
+[dir="rtl"] .nav-main {
+  flex-wrap: wrap !important;
+}
+
 /* Utility classes for better RTL support */
 .rtl-flip {
   transform: scaleX(-1);
