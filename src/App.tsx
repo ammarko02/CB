@@ -29,7 +29,7 @@ import HRDashboard from "./pages/hr/Dashboard";
 import EmployeeManagement from "./pages/hr/EmployeeManagement";
 import HRReports from "./pages/hr/Reports";
 import HRDepartments from "./pages/hr/Departments";
-import BulkImportGuide from "./pages/hr/BulkImportGuide";
+
 import HRAnalytics from "./pages/hr/Analytics";
 
 // Supplier Pages
@@ -171,14 +171,7 @@ function AppRoutes() {
                       </ProtectedRoute>
                     }
                   />
-                  <Route
-                    path="/hr/bulk-import-guide"
-                    element={
-                      <ProtectedRoute allowedRoles={["super_admin", "hr"]}>
-                        <BulkImportGuide />
-                      </ProtectedRoute>
-                    }
-                  />
+
                   <Route
                     path="/hr/analytics"
                     element={
