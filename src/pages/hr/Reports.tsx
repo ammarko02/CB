@@ -458,6 +458,10 @@ export default function HRReports() {
                             <Eye className="w-4 h-4 text-muted-foreground" />
                             {(offer.views || 0).toLocaleString("ar-SA")}
                           </div>
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                            {(offer.redemptions || 0).toLocaleString("ar-SA")}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -473,7 +477,7 @@ export default function HRReports() {
                   معدلات المشاركة والتفاعل
                 </CardTitle>
                 <CardDescription>
-                  مقاييس الأداء الرئيسية ��نظام المزايا
+                  مقاييس الأداء الرئيسية لنظام المزايا
                 </CardDescription>
               </CardHeader>
               <CardContent>
