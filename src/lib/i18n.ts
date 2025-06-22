@@ -355,10 +355,10 @@ const arTranslations = {
     useAccount: "استخدام الحساب",
   },
   app: {
-    title: "مركز المزايا السعيد",
+    title: "مركز المزايا",
     subtitle: "منصة إدارة مزايا الموظفين",
     description: "اكتشف المزايا والمكافآت الرائعة المخصصة لك",
-    copyright: "© 2024 مركز المزايا السعيد. جميع الحقوق محفوظة.",
+    copyright: "© 2024 مركز المزايا. جميع الحقوق محفوظة.",
   },
   navigation: {
     dashboard: "لوحة التحكم",
@@ -379,7 +379,7 @@ const arTranslations = {
   },
   dashboard: {
     totalUsers: "إجمالي المستخدمين",
-    totalOffers: "إجمالي العروض",
+    totalOffers: "إجم��لي العروض",
     totalRedemptions: "إجمالي عمليات الاستبدال",
     activeEmployees: "الموظفون النشطون",
     pendingOffers: "العروض المعلقة",
@@ -473,7 +473,7 @@ const arTranslations = {
     branchAddress: "عنوان الفرع",
     usageLimits: "حدود الاستخدام",
     oncePerEmployee: "مرة واحدة لكل موظف",
-    multipleUses: "عدد محدود من المرات",
+    multipleUses: "عد�� محدود من المرات",
     unlimitedUses: "غير محدود",
     usesPerEmployee: "عدد مرات الاستخدام لكل موظف",
     discountCodeType: "نوع كود الخصم",
@@ -567,7 +567,7 @@ const arTranslations = {
     tryAgain: "حاول مرة أخرى",
     loadingFailed: "فشل تحميل البيانات",
     saveFailed: "فشل الحفظ",
-    deleteFailed: "فشل الحذف",
+    deleteFailed: "فشل ال��ذف",
     updateFailed: "فشل التحديث",
   },
   validation: {
@@ -633,7 +633,7 @@ const arTranslations = {
     systemSettings: "إعدادات النظام",
     userManagement: "إدارة المستخدمين",
     contentManagement: "إدارة المحتوى",
-    securitySettings: "إعدادات ال��مان",
+    securitySettings: "إعدادات الأمان",
     backupRestore: "النسخ الاحتياطي والاستعادة",
     systemLogs: "سجلات النظام",
     permissions: "الصلاحيات",
