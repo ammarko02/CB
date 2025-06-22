@@ -442,7 +442,7 @@ export default function HRReports() {
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-purple-600">
-                            {dept.pointsUsed.toLocaleString("ar-SA")}
+                            {(dept.pointsUsed || 0).toLocaleString("ar-SA")}
                           </p>
                           <p className="text-muted-foreground">نقطة مستخدمة</p>
                         </div>
@@ -454,13 +454,10 @@ export default function HRReports() {
                         </div>
                       </div>
                       <div className="mt-3 pt-3 border-t border-gray-200">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">
-                            الفئة المفضلة:
-                          </span>
-                          <Badge variant="secondary">
-                            {t(`categories.${dept.topCategory}`)}
-                          </Badge>
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Eye className="w-4 h-4 text-muted-foreground" />
+                            {(offer.views || 0).toLocaleString("ar-SA")}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -476,7 +473,7 @@ export default function HRReports() {
                   معدلات المشاركة والتفاعل
                 </CardTitle>
                 <CardDescription>
-                  مقاييس الأداء الرئيسية لنظام المزايا
+                  مقاييس الأداء الرئيسية ��نظام المزايا
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -533,7 +530,7 @@ export default function HRReports() {
                 تقرير أداء العروض التفصيلي
               </CardTitle>
               <CardDescription>
-                إحصائيات العروض الأكثر نجاحاً والأكثر مشا��دة
+                إحصائيات العروض الأكثر نجاحاً والأكثر مشاهدة
               </CardDescription>
               <div className="flex gap-2">
                 <Button
@@ -565,10 +562,10 @@ export default function HRReports() {
                     {offerPerformanceReports.map((offer) => (
                       <TableRow key={offer.id}>
                         <TableCell className="font-medium">
-                          <div>
-                            <p className="font-semibold">{offer.title}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {offer.pointsCost} نقطة
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                            {(offer.redemptions || 0).toLocaleString("ar-SA")}
+                          </div>
                             </p>
                           </div>
                         </TableCell>
@@ -603,7 +600,7 @@ export default function HRReports() {
                         </TableCell>
                         <TableCell>
                           <span className="font-semibold">
-                            {offer.revenue.toLocaleString("ar-SA")} ر.س
+                            {(offer.revenue || 0).toLocaleString("ar-SA")} ر.س
                           </span>
                         </TableCell>
                         <TableCell>
