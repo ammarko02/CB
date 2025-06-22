@@ -330,7 +330,9 @@ export function OfferCard({
                   ملاحظات الإدارة
                 </span>
               </div>
-            <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right ml-auto"
+              <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right ml-auto">
+                {offer.description}
+              </p>
               {offer.reviewedAt && (
                 <p className="text-xs text-blue-600 mt-1">
                   تاريخ المراجعة:{" "}
@@ -363,7 +365,7 @@ export function OfferCard({
 
           <div className="space-y-3">
             {/* Discount and Points */}
-              <div className="flex flex-col justify-center items-start mb-4">
+            <div className="flex flex-col justify-center items-start mb-4">
               <div className="flex items-center gap-2">
                 <Percent className="h-4 w-4 text-green-600" />
                 <span className="font-semibold text-green-600">
