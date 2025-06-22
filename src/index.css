@@ -257,6 +257,43 @@ html[dir="rtl"]
   text-align: right !important;
 }
 
+/* Maximum specificity RTL forcing - target everything */
+html[dir="rtl"] body * {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Force RTL on ALL text content */
+[dir="rtl"] .text-3xl,
+[dir="rtl"] .text-xl,
+[dir="rtl"] .font-bold,
+[dir="rtl"] .font-semibold {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+  writing-mode: horizontal-tb !important;
+}
+
+/* Ultra specific targeting for dashboard elements */
+[dir="rtl"] .container > .space-y-6 > div:first-child h1,
+[dir="rtl"] .container > .space-y-6 > div:first-child .text-muted-foreground,
+[dir="rtl"] .grid .card .card-header .card-title,
+[dir="rtl"] .card-title,
+[dir="rtl"] .card-description {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Force RTL on any element containing Arabic text */
+*[dir="rtl"]:lang(ar),
+*[dir="rtl"] *:lang(ar) {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
 /* Force RTL on all common UI elements */
 [dir="rtl"] .text-left,
 [dir="rtl"] .text-start {
