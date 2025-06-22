@@ -142,7 +142,7 @@ export default function EmployeeManagement() {
     } catch (error) {
       toast({
         title: t("notifications.error"),
-        description: "فشل في إنشاء حساب الموظف",
+        description: "فشل في إنشاء حس��ب الموظف",
         variant: "destructive",
       });
     }
@@ -355,16 +355,7 @@ export default function EmployeeManagement() {
             />
             تصدير
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => window.open("/hr/bulk-import-guide", "_blank")}
-            title="دليل الاستيراد المجمع"
-          >
-            <HelpCircle
-              className={`w-4 h-4 ${i18n.language === "ar" ? "ml-2" : "mr-2"}`}
-            />
-            دليل الاستيراد
-          </Button>
+
           <BulkEmployeeUpload onEmployeesImported={handleBulkImport} />
           <Dialog
             open={isCreateDialogOpen}
