@@ -57,7 +57,6 @@ import {
   MoreHorizontal,
   Eye,
   RefreshCw,
-  HelpCircle,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -142,7 +141,7 @@ export default function EmployeeManagement() {
     } catch (error) {
       toast({
         title: t("notifications.error"),
-        description: "فشل في إنشاء حس��ب الموظف",
+        description: "فشل في إنشاء حساب الموظف",
         variant: "destructive",
       });
     }
