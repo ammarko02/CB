@@ -328,7 +328,7 @@ export default function HRReports() {
             </div>
             <div>
               <p className="text-2xl font-bold text-blue-900">
-                {activeEmployees.toLocaleString("ar-SA")}
+                {(activeEmployees || 0).toLocaleString("ar-SA")}
               </p>
               <p className="text-sm text-blue-700">الموظفون النشطون</p>
             </div>
@@ -342,7 +342,7 @@ export default function HRReports() {
             </div>
             <div>
               <p className="text-2xl font-bold text-green-900">
-                {totalRedemptions.toLocaleString("ar-SA")}
+                {(totalRedemptions || 0).toLocaleString("ar-SA")}
               </p>
               <p className="text-sm text-green-700">إجمالي الاستبدالات</p>
             </div>
@@ -356,7 +356,7 @@ export default function HRReports() {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-                {totalPointsUsed.toLocaleString("ar-SA")}
+                {(totalPointsUsed || 0).toLocaleString("ar-SA")}
               </p>
               <p className="text-sm text-purple-700">النقاط المستخدمة</p>
             </div>
@@ -370,7 +370,7 @@ export default function HRReports() {
             </div>
             <div>
               <p className="text-2xl font-bold text-orange-900">
-                {approvedOffers.toLocaleString("ar-SA")}
+                {(approvedOffers || 0).toLocaleString("ar-SA")}
               </p>
               <p className="text-sm text-orange-700">العروض المتاحة</p>
             </div>
@@ -533,7 +533,7 @@ export default function HRReports() {
                 تقرير أداء العروض التفصيلي
               </CardTitle>
               <CardDescription>
-                إحصائيات العروض الأكثر نجاحاً والأكثر مشاهدة
+                إحصائيات العروض الأكثر نجاحاً والأكثر مشا��دة
               </CardDescription>
               <div className="flex gap-2">
                 <Button
