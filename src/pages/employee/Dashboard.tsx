@@ -34,8 +34,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 
 export default function EmployeeDashboard() {
+  const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const { user } = useAuth();
-  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
@@ -121,22 +122,37 @@ export default function EmployeeDashboard() {
     <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">
-            {t("dashboard.welcomeBack")}, {user?.firstName}! 👋
-          </h1>
-          <p className="text-muted-foreground pb-5">{t("app.description")}</p>
+        <div className={cn("space-y-2", isRTL ? "text-right" : "text-left")}>
+          <DirectionAwareHeading level={1} className="text-3xl font-bold">
+            <TranslatedText tKey="dashboard.welcomeBack" />, {user?.firstName}!
+            👋
+          </DirectionAwareHeading>
+          <DirectionAwareParagraph className="text-muted-foreground pb-5">
+            <TranslatedText tKey="app.description" />
+          </DirectionAwareParagraph>
         </div>
-        <div className="flex gap-2 mt-4 sm:mt-0">
-          <Button onClick={() => navigate("/employee/offers")}>
-            <Package className="w-4 h-4 mr-2" />
-            {t("offers.browseOffers")}
+        <div
+          className={cn(
+            "flex gap-2 mt-4 sm:mt-0",
+            isRTL ? "flex-row-reverse" : "flex-row",
+          )}
+        >
+          <Button
+            onClick={() => navigate("/employee/offers")}
+            className={cn(isRTL ? "flex-row-reverse" : "flex-row")}
+          >
+            <Package className={cn("w-4 h-4", isRTL ? "ml-2" : "mr-2")} />
+            <TranslatedText tKey="offers.browseOffers" />
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/employee/my-redemptions")}
+            className={cn(isRTL ? "flex-row-reverse" : "flex-row")}
+          >
+            <History className={cn("w-4 h-4", isRTL ? "ml-2" : "mr-2")} />
+            <TranslatedText tKey="navigation.myRedemptions" />
           </Button>
         </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
         <StatsCard
           title={t("dashboard.pointsBalance")}
           value={`${points.toLocaleString()}`}
