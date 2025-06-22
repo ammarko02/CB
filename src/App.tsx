@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Navigation } from "@/components/Navigation";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { RTLProvider } from "@/components/RTLProvider";
 import { getDefaultRoute } from "@/lib/permissions";
 import "@/lib/i18n";
 
@@ -334,9 +335,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <LanguageProvider>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
+          <RTLProvider>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
+          </RTLProvider>
         </LanguageProvider>
       </BrowserRouter>
     </TooltipProvider>
