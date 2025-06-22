@@ -1,9 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { NAVIGATION_ITEMS } from "@/lib/constants";
 import { getDefaultRoute } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MessageCenter } from "@/components/MessageCenter";
+import { DirectionAwareText } from "@/components/DirectionAwareText";
+import { TranslatedText } from "@/components/TranslatedText";
 import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
@@ -58,6 +61,7 @@ const iconMap = {
 export function Navigation() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +117,10 @@ export function Navigation() {
             onClick={() => handleNavigation(item.path)}
           >
             <Icon className="h-4 w-4" />
-            {getTranslatedLabel(item.label)}
+            <TranslatedText
+              tKey={`navigation.${item.label.toLowerCase().replace(" ", "")}`}
+              fallback={getTranslatedLabel(item.label)}
+            />
           </Button>
         );
       })}
@@ -217,7 +224,7 @@ export function Navigation() {
                 HP
               </span>
             </div>
-            {t("app.title")}
+            <TranslatedText tKey="app.title" />
           </Link>
 
           {/* Desktop Navigation */}
