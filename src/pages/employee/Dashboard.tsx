@@ -125,7 +125,7 @@ export default function EmployeeDashboard() {
           <h1 className="text-3xl font-bold">
             {t("dashboard.welcomeBack")}, {user?.firstName}! 👋
           </h1>
-          <p className="text-muted-foreground">{t("app.description")}</p>
+          <p className="text-muted-foreground pb-5">{t("app.description")}</p>
         </div>
         <div className="flex gap-2 mt-4 sm:mt-0">
           <Button onClick={() => navigate("/employee/offers")}>
