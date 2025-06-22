@@ -1,13 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Offer } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
+  CardDescription,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { DirectionAwareText } from "@/components/DirectionAwareText";
+import { TranslatedText } from "@/components/TranslatedText";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/dateUtils";
 import {
   Calendar,
   MapPin,
@@ -17,482 +25,374 @@ import {
   Percent,
   Heart,
   MoreVertical,
-  Edit,
-  Trash2,
-  CheckCircle,
-  XCircle,
   Globe,
   Building,
   ExternalLink,
+  Zap,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { OFFER_CATEGORIES, OFFER_STATUS_COLORS } from "@/lib/constants";
-import { useAuth } from "@/contexts/AuthContext";
-import { useTranslation } from "react-i18next";
-import { formatDate, getDaysUntilExpiry } from "@/lib/dateUtils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { toast } from "@/hooks/use-toast";
-import { RedemptionModal } from "./RedemptionModal";
 
 interface OfferCardProps {
   offer: Offer;
-  onRedeem?: (offerId: string) => void;
-  onEdit?: (offer: Offer) => void;
-  onDelete?: (offerId: string) => void;
-  onApprove?: (offerId: string) => void;
-  onReject?: (offerId: string) => void;
-  showActions?: boolean;
-  variant?: "default" | "admin" | "supplier" | "horizontal" | "vertical";
+  onRedeem?: (offerId: string) => Promise<void>;
+  compact?: boolean;
+  showRedeemButton?: boolean;
+  className?: string;
 }
 
 export function OfferCard({
   offer,
   onRedeem,
-  onEdit,
-  onDelete,
-  onApprove,
-  onReject,
-  showActions = true,
-  variant = "default",
+  compact = false,
+  showRedeemButton = true,
+  className,
 }: OfferCardProps) {
-  const { user } = useAuth();
   const { t, i18n } = useTranslation();
-  const [isLiked, setIsLiked] = useState(() => {
-    // تحقق من Local Storage لمعرفة إذا كان العرض في المفضلة
-    if (user?.id) {
-      const savedFavorites = localStorage.getItem(`favorites_${user.id}`);
-      if (savedFavorites) {
-        const favoriteIds = JSON.parse(savedFavorites);
-        return favoriteIds.includes(offer.id);
-      }
-    }
-    return false;
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showRedemptionModal, setShowRedemptionModal] = useState(false);
+  const { isRTL } = useLanguage();
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const toggleFavorite = () => {
-    if (!user?.id) return;
+  const isExpired = new Date(offer.expiryDate) < new Date();
+  const daysLeft = Math.ceil(
+    (new Date(offer.expiryDate).getTime() - new Date().getTime()) /
+      (1000 * 60 * 60 * 24),
+  );
 
-    try {
-      const savedFavorites = localStorage.getItem(`favorites_${user.id}`);
-      let favoriteIds: string[] = savedFavorites
-        ? JSON.parse(savedFavorites)
-        : [];
-
-      if (isLiked) {
-        // إزالة من المفضلة
-        favoriteIds = favoriteIds.filter((id) => id !== offer.id);
-        setIsLiked(false);
-        toast({
-          title: "تم الحذف من المفضلة",
-          description: `تم حذف "${offer.title}" من المفضلة`,
-        });
-      } else {
-        // إضافة إلى المفضلة
-        if (!favoriteIds.includes(offer.id)) {
-          favoriteIds.push(offer.id);
-        }
-        setIsLiked(true);
-        toast({
-          title: "تم الإضافة للمفضلة",
-          description: `تم إضافة "${offer.title}" للمفضلة`,
-        });
-      }
-
-      localStorage.setItem(`favorites_${user.id}`, JSON.stringify(favoriteIds));
-    } catch (error) {
-      toast({
-        title: "خطأ",
-        description: "فشل في تحديث المفضلة",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRedeem = async (offerId: string) => {
-    if (!onRedeem) return;
-
-    setIsLoading(true);
-    try {
-      await onRedeem(offerId);
-      toast({
-        title: "تم استبدال العرض!",
-        description: `تم استبدال "${offer.title}" بنجاح`,
-      });
-    } catch (error) {
-      toast({
-        title: "فشل الاستبدال",
-        description:
-          error instanceof Error ? error.message : "فشل في استبدال العرض",
-        variant: "destructive",
-      });
-      throw error; // Re-throw for modal handling
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleApprove = async () => {
-    if (!onApprove) return;
-
-    try {
-      await onApprove(offer.id);
-      toast({
-        title: "تم قبول العرض",
-        description: `تم قبول "${offer.title}" وأصبح مرئياً للموظفين.`,
-      });
-    } catch (error) {
-      toast({
-        title: "فشل القبول",
-        description:
-          error instanceof Error ? error.message : "فشل في قبول العرض",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleReject = async () => {
-    if (!onReject) return;
-
-    try {
-      await onReject(offer.id);
-      toast({
-        title: "تم رفض العرض",
-        description: `تم رفض "${offer.title}".`,
-      });
-    } catch (error) {
-      toast({
-        title: "فشل الرفض",
-        description:
-          error instanceof Error ? error.message : "فشل في رفض العرض",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const isExpired = new Date(offer.expiryDate || offer.validTo) < new Date();
-  const discount = offer.discountPercentage || offer.discount;
-  const canRedeem =
-    user?.role === "employee" && offer.status === "approved" && !isExpired;
-  const canManage =
-    user?.role === "super_admin" ||
-    (user?.role === "supplier" && offer.supplierId === user.id);
-  const daysLeft = getDaysUntilExpiry(offer.expiryDate || offer.validTo);
-
-  // Status translations
   const statusLabels = {
-    pending: "في الانتظار",
-    approved: "مقبول",
-    rejected: "مرفوض",
-    expired: "منتهي الصلاحية",
+    pending: isRTL ? "في الانتظار" : "Pending",
+    approved: isRTL ? "مقبول" : "Approved",
+    rejected: isRTL ? "مرفوض" : "Rejected",
+  };
+
+  const categoryLabels = {
+    food: isRTL ? "الطعام والمأكولات" : "Food & Dining",
+    fitness: isRTL ? "اللياقة والصحة" : "Fitness & Health",
+    entertainment: isRTL ? "الترفيه" : "Entertainment",
+    travel: isRTL ? "السفر والمواصلات" : "Travel & Transportation",
+    retail: isRTL ? "التسوق والبيع بالتجزئة" : "Retail & Shopping",
+    technology: isRTL ? "التكنولوجيا" : "Technology",
+    other: isRTL ? "أخرى" : "Other",
   };
 
   const redemptionTypeLabels = {
-    online: "عبر الإنترنت",
-    branch: "في الفرع",
+    online: isRTL ? "متاح أونلاين" : "Available Online",
+    branch: isRTL ? "متاح في الفرع" : "Available in Branch",
+  };
+
+  const handleRedeem = async () => {
+    if (!onRedeem) return;
+
+    try {
+      setIsRedeeming(true);
+      await onRedeem(offer.id);
+      toast({
+        title: isRTL ? "تم الاستبدال بنجاح!" : "Offer redeemed successfully!",
+        description: isRTL
+          ? "تم استبدال العرض بنجاح"
+          : "Your offer has been redeemed successfully",
+      });
+    } catch (error) {
+      toast({
+        title: isRTL ? "فشل الاستبدال" : "Redemption failed",
+        description: isRTL
+          ? "حدث خطأ أثناء استبدال العرض"
+          : "An error occurred while redeeming the offer",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    toast({
+      title: isFavorite
+        ? isRTL
+          ? "تم الإزالة من المفضلة"
+          : "Removed from favorites"
+        : isRTL
+          ? "تم الإضافة للمفضلة"
+          : "Added to favorites",
+    });
+  };
+
+  const OFFER_STATUS_COLORS = {
+    pending: "bg-yellow-100 text-yellow-800",
+    approved: "bg-green-100 text-green-800",
+    rejected: "bg-red-100 text-red-800",
   };
 
   return (
-    <>
-      <Card
-        className={cn(
-          "group overflow-hidden transition-all duration-200 hover:shadow-lg",
-          isExpired && "opacity-75",
-        )}
-      >
-        <CardHeader className="p-4">
-          <div className="flex items-start justify-between">
+    <Card
+      className={cn(
+        "overflow-hidden transition-all hover:shadow-lg flex flex-col",
+        className,
+      )}
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <CardContent className="p-4 flex flex-col ml-auto">
+        <div className="space-y-4">
+          <div
+            className={cn(
+              "flex items-start justify-between",
+              isRTL ? "flex-row-reverse" : "flex-row",
+            )}
+          >
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2 flex-wrap justify-end">
+              <div
+                className={cn(
+                  "flex items-center gap-2 mb-2 flex-wrap justify-end",
+                  isRTL ? "justify-end" : "justify-start",
+                )}
+              >
                 <Badge className={OFFER_STATUS_COLORS[offer.status]}>
                   {statusLabels[offer.status]}
                 </Badge>
                 <Badge variant="outline">
-                  {t(`categories.${offer.category}`)}
+                  {categoryLabels[offer.category]}
                 </Badge>
-                <Badge variant="secondary">
-                  {offer.redemptionType === "online" ? (
-                    <Globe className="w-3 h-3 ml-1" />
-                  ) : (
-                    <Building className="w-3 h-3 ml-1" />
-                  )}
-                  {redemptionTypeLabels[offer.redemptionType]}
-                </Badge>
+                {!isExpired && (
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
+                    {offer.redemptionType === "online" ? (
+                      <Globe className="w-3 h-3" />
+                    ) : (
+                      <Building className="w-3 h-3" />
+                    )}
+                    {redemptionTypeLabels[offer.redemptionType]}
+                  </Badge>
+                )}
                 {isExpired && (
                   <Badge variant="destructive">
-                    <Clock className="w-3 h-3 ml-1" />
-                    منتهي الصلاحية
+                    <Clock className="w-3 h-3 mr-1" />
+                    <TranslatedText tKey="offers.expired" />
                   </Badge>
                 )}
-                {daysLeft <= 7 && daysLeft > 0 && (
-                  <Badge variant="destructive">
-                    <Clock className="w-3 h-3 ml-1" />
-                    {daysLeft} {daysLeft === 1 ? "يوم متبقي" : "أيام متبقية"}
-                  </Badge>
-                )}
-              </div>
-              <h3 className="font-semibold text-lg leading-tight">
-                {offer.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                بواسطة {offer.supplierName}
-              </p>
-            </div>
-
-            {showActions && (
-              <div className="flex items-center gap-2">
-                {user?.role === "employee" && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => toggleFavorite()}
-                    className="h-8 w-8"
+                {!isExpired && daysLeft <= 7 && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-orange-100 text-orange-800"
                   >
-                    <Heart
-                      className={cn(
-                        "h-4 w-4",
-                        isLiked && "fill-red-500 text-red-500",
-                      )}
-                    />
-                  </Button>
-                )}
-
-                {(canManage || variant === "admin") && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {variant === "admin" && offer.status === "pending" && (
-                        <>
-                          <DropdownMenuItem onClick={handleApprove}>
-                            <CheckCircle className="w-4 h-4 ml-2" />
-                            قبول العرض
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={handleReject}>
-                            <XCircle className="w-4 h-4 ml-2" />
-                            رفض العرض
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                      {canManage && (
-                        <>
-                          <DropdownMenuItem onClick={() => onEdit?.(offer)}>
-                            <Edit className="w-4 h-4 ml-2" />
-                            تعديل العرض
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => onDelete?.(offer.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4 ml-2" />
-                            حذف العرض
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <Clock className="w-3 h-3 mr-1" />
+                    <TranslatedText tKey="offers.expiringOffer" />
+                  </Badge>
                 )}
               </div>
-            )}
-          </div>
-        </CardHeader>
-
-        <CardContent className="p-4 pt-0">
-          {offer.imageUrl && (
-            <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-muted">
-              <img
-                src={offer.imageUrl}
-                alt={offer.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {offer.description}
-          </p>
-
-          {/* Admin Notes for Suppliers */}
-          {user?.role === "supplier" && offer.adminNotes && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">
-                  ملاحظات الإدارة
-                </span>
-              </div>
-              <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right ml-auto">
-                {offer.description}
-              </p>
+              <DirectionAwareText className="text-lg font-semibold mb-2">
+                {offer.title}
+              </DirectionAwareText>
+              {offer.supplier && (
+                <DirectionAwareText className="text-sm text-muted-foreground">
+                  <TranslatedText tKey="offers.by" /> {offer.supplier}
+                </DirectionAwareText>
+              )}
               {offer.reviewedAt && (
-                <p className="text-xs text-blue-600 mt-1">
-                  تاريخ المراجعة:{" "}
+                <DirectionAwareText className="text-xs text-blue-600 mt-1">
+                  <TranslatedText tKey="offers.reviewDate" />:{" "}
                   {formatDate(offer.reviewedAt, "PPP", i18n.language)}
-                </p>
+                </DirectionAwareText>
               )}
             </div>
-          )}
+            <div
+              className={cn(
+                "flex flex-col items-end gap-2",
+                isRTL ? "items-start" : "items-end",
+              )}
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleFavorite}
+                className="h-8 w-8"
+              >
+                <Heart
+                  className={cn(
+                    "h-4 w-4",
+                    isFavorite ? "fill-red-500 text-red-500" : "",
+                  )}
+                />
+              </Button>
+            </div>
+          </div>
 
-          {/* Reject Reason for Suppliers */}
-          {user?.role === "supplier" &&
-            offer.rejectReason &&
-            offer.status === "rejected" && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <XCircle className="w-4 h-4 text-red-600" />
-                  <span className="text-sm font-medium text-red-800">
-                    سبب الرفض
-                  </span>
-                </div>
-                <p className="text-sm text-red-700">{offer.rejectReason}</p>
-                {offer.reviewedAt && (
-                  <p className="text-xs text-red-600 mt-1">
-                    تاريخ الرفض:{" "}
-                    {formatDate(offer.reviewedAt, "PPP", i18n.language)}
-                  </p>
-                )}
-              </div>
-            )}
+          {/* Image */}
+          <div className="aspect-video bg-muted rounded-lg overflow-hidden mb-4">
+            <img
+              src={offer.imageUrl || "/placeholder.svg"}
+              alt={offer.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
+          {/* Description */}
+          <DirectionAwareText className="text-muted-foreground mb-4 text-sm overflow-hidden text-right ml-auto">
+            {offer.description}
+          </DirectionAwareText>
+
+          {/* Pricing Section */}
           <div className="space-y-3">
-            {/* Discount and Points */}
-            <div className="flex flex-col justify-center items-start mb-4">
-              <div className="flex items-center gap-2">
-                <Percent className="h-4 w-4 text-green-600" />
-                <span className="font-semibold text-green-600">
-                  خصم {discount}%
-                </span>
+            <div
+              className={cn(
+                "flex flex-col justify-center items-start",
+                isRTL ? "items-end" : "items-start",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex items-center gap-2",
+                  isRTL ? "flex-row-reverse" : "flex-row",
+                )}
+              >
+                <Zap className="w-4 h-4 text-green-600" />
+                <DirectionAwareText className="text-green-600 font-semibold ltr-content">
+                  {offer.pointsCost.toLocaleString(isRTL ? "ar-SA" : "en-US")}{" "}
+                  {isRTL ? "نقطة" : "points"}
+                </DirectionAwareText>
               </div>
-              <div className="font-semibold text-primary">
-                {offer.pointsCost.toLocaleString("ar-SA")} نقطة
-              </div>
-            </div>
-
-            {/* Location/Website Info */}
-            <div className="space-y-2">
-              {offer.redemptionType === "online" && offer.websiteUrl && (
-                <div className="flex items-center gap-2 text-sm text-blue-600">
-                  <Globe className="h-4 w-4" />
-                  <span className="truncate">متاح عبر الموقع الإلكتروني</span>
-                  <ExternalLink className="h-3 w-3" />
+              {offer.discount > 0 && (
+                <div
+                  className={cn(
+                    "flex items-center gap-2 mt-1",
+                    isRTL ? "flex-row-reverse" : "flex-row",
+                  )}
+                >
+                  <Percent className="w-4 h-4 text-blue-600" />
+                  <DirectionAwareText className="text-blue-600 font-semibold ltr-content">
+                    {offer.discount}% {isRTL ? "خصم" : "OFF"}
+                  </DirectionAwareText>
                 </div>
               )}
+            </div>
 
-              {offer.redemptionType === "branch" && (
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm justify-end">
-                    <Building className="h-4 w-4 text-purple-600" />
-                    <span>��تاح في الفرع</span>
+            {/* Redemption Info */}
+            <div className="mt-3">
+              {offer.redemptionType === "online" ? (
+                <div
+                  className={cn(
+                    "flex items-center gap-2 text-sm text-blue-600",
+                    isRTL ? "flex-row-reverse justify-end" : "flex-row",
+                  )}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <DirectionAwareText>
+                    <TranslatedText tKey="offers.visitWebsite" />
+                  </DirectionAwareText>
+                </div>
+              ) : (
+                <div>
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 text-sm justify-end",
+                      isRTL ? "flex-row-reverse justify-end" : "flex-row",
+                    )}
+                  >
+                    <Building className="w-4 h-4 text-purple-600" />
+                    <DirectionAwareText>
+                      <TranslatedText tKey="offers.availableInBranch" />
+                    </DirectionAwareText>
                   </div>
                   {offer.branchAddress && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 justify-end">
-                      <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                      <span>{offer.branchAddress}</span>
+                    <div
+                      className={cn(
+                        "flex items-center gap-2 text-xs text-muted-foreground mt-1 justify-end",
+                        isRTL ? "flex-row-reverse justify-end" : "flex-row",
+                      )}
+                    >
+                      <MapPin className="w-3 h-3 mt-0.5" />
+                      <DirectionAwareText>
+                        {offer.branchAddress}
+                      </DirectionAwareText>
                     </div>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Expiry and Stats */}
-            <div className="flex items-center justify-end text-sm text-muted-foreground mt-3">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  ينتهي{" "}
-                  {formatDate(offer.expiryDate, "MMM dd, yyyy", i18n.language)}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end text-sm mt-3">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span>{offer.views.toLocaleString("ar-SA")}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                  <span>{offer.redemptions.toLocaleString("ar-SA")}</span>
-                </div>
-              </div>
-            </div>
-
-            {offer.remainingRedemptions !== undefined &&
-              offer.remainingRedemptions <= 10 &&
-              offer.remainingRedemptions > 0 && (
-                <div className="text-xs text-orange-600 font-medium">
-                  متبقي {offer.remainingRedemptions.toLocaleString("ar-SA")}{" "}
-                  فقط!
-                </div>
+            {/* Footer Info */}
+            <div
+              className={cn(
+                "flex items-center justify-end text-sm text-muted-foreground mt-3",
+                isRTL ? "flex-row-reverse justify-end" : "flex-row",
               )}
-
-            {offer.termsConditions && (
-              <div className="text-xs text-muted-foreground">
-                <strong>الشروط:</strong> {offer.termsConditions}
+            >
+              <div
+                className={cn(
+                  "flex items-center gap-1",
+                  isRTL ? "flex-row-reverse" : "flex-row",
+                )}
+              >
+                <Calendar className="w-4 h-4" />
+                <DirectionAwareText>
+                  <TranslatedText tKey="offers.expires" />{" "}
+                  {formatDate(offer.expiryDate, "MMM dd, yyyy", i18n.language)}
+                </DirectionAwareText>
               </div>
+            </div>
+
+            {/* Stats */}
+            <div
+              className={cn(
+                "flex items-center justify-end text-sm mt-3",
+                isRTL ? "flex-row-reverse justify-end" : "flex-row",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex items-center gap-4",
+                  isRTL ? "flex-row-reverse" : "flex-row",
+                )}
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-1",
+                    isRTL ? "flex-row-reverse" : "flex-row",
+                  )}
+                >
+                  <Eye className="w-4 h-4 text-muted-foreground" />
+                  <DirectionAwareText className="ltr-content">
+                    {(offer.views || 0).toLocaleString(
+                      isRTL ? "ar-SA" : "en-US",
+                    )}
+                  </DirectionAwareText>
+                </div>
+                <div
+                  className={cn(
+                    "flex items-center gap-1",
+                    isRTL ? "flex-row-reverse" : "flex-row",
+                  )}
+                >
+                  <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                  <DirectionAwareText className="ltr-content">
+                    {(offer.redemptions || 0).toLocaleString(
+                      isRTL ? "ar-SA" : "en-US",
+                    )}
+                  </DirectionAwareText>
+                </div>
+              </div>
+            </div>
+
+            {/* Redeem Button */}
+            {showRedeemButton && !isExpired && (
+              <Button
+                onClick={handleRedeem}
+                disabled={isRedeeming}
+                className={cn(
+                  "w-full mt-4",
+                  isRTL ? "flex-row-reverse" : "flex-row",
+                )}
+              >
+                {isRedeeming ? (
+                  <TranslatedText tKey="offers.redeeming" />
+                ) : (
+                  <TranslatedText tKey="offers.redeemOffer" />
+                )}
+              </Button>
             )}
           </div>
-        </CardContent>
-
-        {showActions && (
-          <CardFooter className="p-4 pt-0">
-            {canRedeem ? (
-              <Button
-                onClick={() => setShowRedemptionModal(true)}
-                disabled={isLoading || offer.remainingRedemptions === 0}
-                className="w-full"
-              >
-                {isLoading ? "جاري المعالجة..." : "استبدال العرض"}
-              </Button>
-            ) : variant === "admin" && offer.status === "pending" ? (
-              <div className="flex gap-2 w-full">
-                <Button
-                  onClick={handleApprove}
-                  variant="default"
-                  className="flex-1"
-                >
-                  قبول
-                </Button>
-                <Button
-                  onClick={handleReject}
-                  variant="destructive"
-                  className="flex-1"
-                >
-                  رفض
-                </Button>
-              </div>
-            ) : (
-              <Button variant="outline" className="w-full" disabled>
-                {isExpired
-                  ? "منتهي الصلاحية"
-                  : offer.status === "pending"
-                    ? "في انتظار الموافقة"
-                    : offer.status === "rejected"
-                      ? "مرفوض"
-                      : "عرض التفاصيل"}
-              </Button>
-            )}
-          </CardFooter>
-        )}
-      </Card>
-
-      {/* Redemption Modal */}
-      <RedemptionModal
-        offer={offer}
-        isOpen={showRedemptionModal}
-        onClose={() => setShowRedemptionModal(false)}
-        onRedeem={handleRedeem}
-      />
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
