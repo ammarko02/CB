@@ -12,6 +12,8 @@ export function RTLProvider({ children }: RTLProviderProps) {
   useEffect(() => {
     // Force update CSS custom properties
     const root = document.documentElement;
+    const body = document.body;
+
     root.style.setProperty("--direction", isRTL ? "rtl" : "ltr");
     root.style.setProperty("--text-align", isRTL ? "right" : "left");
     root.style.setProperty("--text-align-reverse", isRTL ? "left" : "right");
@@ -42,6 +44,15 @@ export function RTLProvider({ children }: RTLProviderProps) {
     root.style.setProperty("--start", isRTL ? "right" : "left");
     root.style.setProperty("--end", isRTL ? "left" : "right");
 
+    // FORCE DOCUMENT LEVEL RTL/LTR
+    root.setAttribute("dir", isRTL ? "rtl" : "ltr");
+    body.setAttribute("dir", isRTL ? "rtl" : "ltr");
+
+    // Force direction on html and body
+    root.style.direction = isRTL ? "rtl" : "ltr";
+    body.style.direction = isRTL ? "rtl" : "ltr";
+    body.style.textAlign = isRTL ? "right" : "left";
+
     // Update language-specific font families
     if (isRTL) {
       root.style.setProperty(
@@ -58,6 +69,20 @@ export function RTLProvider({ children }: RTLProviderProps) {
     // Add global class to body for easier styling
     document.body.classList.toggle("rtl-layout", isRTL);
     document.body.classList.toggle("ltr-layout", !isRTL);
+
+    // NUCLEAR OPTION: Force direction on ALL existing elements
+    const allElements = document.querySelectorAll("*");
+    allElements.forEach((element) => {
+      if (isRTL) {
+        element.setAttribute("dir", "rtl");
+        (element as HTMLElement).style.direction = "rtl";
+        (element as HTMLElement).style.textAlign = "right";
+      } else {
+        element.setAttribute("dir", "ltr");
+        (element as HTMLElement).style.direction = "ltr";
+        (element as HTMLElement).style.textAlign = "left";
+      }
+    });
   }, [isRTL, currentLanguage]);
 
   return (
