@@ -294,6 +294,44 @@ html[dir="rtl"] body * {
   unicode-bidi: isolate !important;
 }
 
+/* NUCLEAR OPTION: Force RTL on EVERYTHING in RTL context */
+html[dir="rtl"] body *,
+html[dir="rtl"] body *:before,
+html[dir="rtl"] body *:after,
+[dir="rtl"] *,
+[dir="rtl"] *:before,
+[dir="rtl"] *:after {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Override ALL possible text alignment classes */
+[dir="rtl"] .text-left,
+[dir="rtl"] .text-start,
+[dir="rtl"] .justify-start,
+[dir="rtl"] .items-start {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Force RTL on specific Tailwind utility classes */
+[dir="rtl"] .text-3xl,
+[dir="rtl"] .text-2xl,
+[dir="rtl"] .text-xl,
+[dir="rtl"] .text-lg,
+[dir="rtl"] .text-base,
+[dir="rtl"] .text-sm,
+[dir="rtl"] .text-xs,
+[dir="rtl"] .font-bold,
+[dir="rtl"] .font-semibold,
+[dir="rtl"] .font-medium,
+[dir="rtl"] .font-normal {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
 /* Force RTL on all common UI elements */
 [dir="rtl"] .text-left,
 [dir="rtl"] .text-start {
