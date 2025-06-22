@@ -330,7 +330,7 @@ export function OfferCard({
                   ملاحظات الإدارة
                 </span>
               </div>
-            <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right m-0 mb-4 ml-auto">
+            <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right ml-auto"
               {offer.reviewedAt && (
                 <p className="text-xs text-blue-600 mt-1">
                   تاريخ المراجعة:{" "}
