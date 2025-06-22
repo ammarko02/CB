@@ -45,9 +45,6 @@ import RedemptionHistory from "./pages/employee/RedemptionHistory";
 import MyRedemptions from "./pages/employee/MyRedemptions";
 import EmployeeFavorites from "./pages/employee/Favorites";
 
-// Test Pages (development only)
-import TranslationTest from "./pages/TranslationTest";
-
 const queryClient = new QueryClient();
 
 function AppRoutes() {
@@ -308,12 +305,6 @@ function AppRoutes() {
                         <EmployeeFavorites />
                       </ProtectedRoute>
                     }
-                  />
-
-                  {/* Test Routes (development only) */}
-                  <Route
-                    path="/translation-test"
-                    element={<TranslationTest />}
                   />
 
                   {/* Catch all */}
