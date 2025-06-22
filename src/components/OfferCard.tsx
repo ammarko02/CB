@@ -209,7 +209,7 @@ export function OfferCard({
         <CardHeader className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <div className="flex items-center gap-2 mb-2 flex-wrap justify-end">
                 <Badge className={OFFER_STATUS_COLORS[offer.status]}>
                   {statusLabels[offer.status]}
                 </Badge>
@@ -330,7 +330,7 @@ export function OfferCard({
                   ملاحظات الإدارة
                 </span>
               </div>
-              <p className="text-sm text-blue-700">{offer.adminNotes}</p>
+            <p className="text-muted-foreground mb-4 text-sm overflow-hidden text-right m-0 mb-4 ml-auto">
               {offer.reviewedAt && (
                 <p className="text-xs text-blue-600 mt-1">
                   تاريخ المراجعة:{" "}
@@ -363,7 +363,7 @@ export function OfferCard({
 
           <div className="space-y-3">
             {/* Discount and Points */}
-            <div className="flex items-center justify-between">
+              <div className="flex flex-col justify-center items-start mb-4">
               <div className="flex items-center gap-2">
                 <Percent className="h-4 w-4 text-green-600" />
                 <span className="font-semibold text-green-600">
@@ -387,12 +387,12 @@ export function OfferCard({
 
               {offer.redemptionType === "branch" && (
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm justify-end">
                     <Building className="h-4 w-4 text-purple-600" />
                     <span>��تاح في الفرع</span>
                   </div>
                   {offer.branchAddress && (
-                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 justify-end">
                       <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
                       <span>{offer.branchAddress}</span>
                     </div>
@@ -402,7 +402,7 @@ export function OfferCard({
             </div>
 
             {/* Expiry and Stats */}
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div className="flex items-center justify-end text-sm text-muted-foreground mt-3">
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 <span>
@@ -412,7 +412,7 @@ export function OfferCard({
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-end text-sm mt-3">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <Eye className="h-4 w-4 text-muted-foreground" />
