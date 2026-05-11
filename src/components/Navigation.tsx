@@ -109,7 +109,7 @@ export function Navigation() {
           >
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground text-sm font-bold">
-                HP
+                HB
               </span>
             </div>
             {t("app.title")}
@@ -190,7 +190,7 @@ export function Navigation() {
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                     <span className="text-primary-foreground text-sm font-bold">
-                      HP
+                      HB
                     </span>
                   </div>
                   <span className="font-bold">Happy Perks Hub</span>
