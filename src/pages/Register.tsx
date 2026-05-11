@@ -97,7 +97,7 @@ export default function Register() {
         {/* Logo and Title */}
         <div className="text-center">
           <div className="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4">
-            <span className="text-white text-2xl font-bold">HP</span>
+            <span className="text-white text-2xl font-bold">HB</span>
           </div>
           <h1 className="text-3xl font-bold">Join Happy Perks Hub</h1>
           <p className="text-muted-foreground mt-2">
